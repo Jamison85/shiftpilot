@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import App from './App.jsx'
+import { estimateTaskInfo } from './taskEstimator.js'
 import './priority.css'
 
 const STORAGE_KEY = 'shiftpilot:data:v1'
-const BUDGET_KEY = 'shiftpilot:time-budget:v1'
+const ADJUSTMENT_KEY = 'shiftpilot:time-adjustments:v2'
 const SHIFT_LABELS = { morning: 'Morning', mid: 'Mid', night: 'Night' }
 const PRIORITIES = [
   { value: 'urgent', label: 'Urgent', help: 'Moves above everything else' },
@@ -36,12 +37,26 @@ function saveTasks(tasks) {
   }
 }
 
-function readBudgets() {
+function readAdjustments() {
   try {
-    return JSON.parse(localStorage.getItem(BUDGET_KEY)) || { morning: 120, mid: 120, night: 120 }
+    return JSON.parse(localStorage.getItem(ADJUSTMENT_KEY)) || { morning: 0, mid: 0, night: 0 }
   } catch {
-    return { morning: 120, mid: 120, night: 120 }
+    return { morning: 0, mid: 0, night: 0 }
   }
+}
+
+function taskEstimate(task) {
+  const fixedMinutes = Math.max(1, Number(task.minutes) || 15)
+
+  if (task.type !== 'custom') {
+    return { minutes: fixedMinutes, category: 'Required routine', confidence: 'high' }
+  }
+
+  if (task.estimateSource === 'explicit' || fixedMinutes !== 15) {
+    return { minutes: fixedMinutes, category: 'Time you specified', confidence: 'high' }
+  }
+
+  return estimateTaskInfo(task.title, fixedMinutes)
 }
 
 function allocateTime(tasks, availableMinutes) {
@@ -51,14 +66,15 @@ function allocateTime(tasks, availableMinutes) {
     if (priority !== 0) return priority
     return (a.order ?? 99) - (b.order ?? 99)
   })
+  const prepared = sorted.map(task => ({ task, estimate: taskEstimate(task) }))
 
-  if (!sorted.length) return { items: [], estimateTotal: 0, allocatedTotal: 0, buffer: total, tight: false }
+  if (!prepared.length) return { items: [], estimateTotal: 0, allocatedTotal: 0, buffer: total, tight: false }
 
-  const estimateTotal = sorted.reduce((sum, task) => sum + Math.max(1, Number(task.minutes) || 15), 0)
+  const estimateTotal = prepared.reduce((sum, item) => sum + item.estimate.minutes, 0)
 
   if (total >= estimateTotal) {
     return {
-      items: sorted.map(task => ({ task, minutes: Math.max(1, Number(task.minutes) || 15) })),
+      items: prepared.map(item => ({ ...item, minutes: item.estimate.minutes })),
       estimateTotal,
       allocatedTotal: estimateTotal,
       buffer: total - estimateTotal,
@@ -66,18 +82,15 @@ function allocateTime(tasks, availableMinutes) {
     }
   }
 
-  const count = sorted.length
+  const count = prepared.length
   const minimum = total >= count * 5 ? 5 : total >= count ? 1 : 0
   const baseTotal = minimum * count
   const flexible = Math.max(0, total - baseTotal)
-  const weighted = sorted.map(task => {
-    const estimate = Math.max(1, Number(task.minutes) || 15)
-    return estimate * (priorityWeight[task.priority] || 1)
-  })
+  const weighted = prepared.map(item => item.estimate.minutes * (priorityWeight[item.task.priority] || 1))
   const weightTotal = weighted.reduce((sum, weight) => sum + weight, 0) || 1
   const raw = weighted.map(weight => flexible * weight / weightTotal)
   const floors = raw.map(value => Math.floor(value))
-  let remainder = flexible - floors.reduce((sum, value) => sum + value, 0)
+  const remainder = flexible - floors.reduce((sum, value) => sum + value, 0)
 
   const fractions = raw
     .map((value, index) => ({ index, fraction: value - floors[index] }))
@@ -88,7 +101,7 @@ function allocateTime(tasks, availableMinutes) {
   }
 
   return {
-    items: sorted.map((task, index) => ({ task, minutes: minimum + floors[index] })),
+    items: prepared.map((item, index) => ({ ...item, minutes: minimum + floors[index] })),
     estimateTotal,
     allocatedTotal: total,
     buffer: 0,
@@ -108,21 +121,24 @@ function formatTime(minutes) {
 export default function Root() {
   const [panel, setPanel] = useState(null)
   const [tasks, setTasks] = useState([])
+  const [appData, setAppData] = useState(readData)
   const [shift, setShift] = useState('morning')
   const [saved, setSaved] = useState(false)
-  const [budgets, setBudgets] = useState(readBudgets)
+  const [adjustments, setAdjustments] = useState(readAdjustments)
 
   useEffect(() => {
     if (!panel) return
-    const current = readTasks()
-    setTasks(current)
-    const preferred = current.find(task => !task.completed && !task.excluded)?.shift
+    const currentData = readData()
+    const currentTasks = currentData.tasks || []
+    setAppData(currentData)
+    setTasks(currentTasks)
+    const preferred = currentTasks.find(task => !task.completed && !task.excluded)?.shift
     if (preferred) setShift(preferred)
   }, [panel])
 
   useEffect(() => {
-    localStorage.setItem(BUDGET_KEY, JSON.stringify(budgets))
-  }, [budgets])
+    localStorage.setItem(ADJUSTMENT_KEY, JSON.stringify(adjustments))
+  }, [adjustments])
 
   const visibleTasks = useMemo(
     () => tasks.filter(task => task.shift === shift && !task.excluded),
@@ -134,9 +150,27 @@ export default function Root() {
     [tasks, shift],
   )
 
+  const completedEstimate = useMemo(
+    () => tasks
+      .filter(task => task.shift === shift && task.completed && !task.excluded)
+      .reduce((sum, task) => sum + taskEstimate(task).minutes, 0),
+    [tasks, shift],
+  )
+
+  const remainingEstimate = useMemo(
+    () => remainingTasks.reduce((sum, task) => sum + taskEstimate(task).minutes, 0),
+    [remainingTasks],
+  )
+
+  const shiftHours = Math.max(0, Number(appData.shiftHours?.[shift]) || 0)
+  const automaticBase = shiftHours > 0
+    ? Math.max(0, Math.round(shiftHours * 60) - completedEstimate)
+    : remainingEstimate
+  const availableMinutes = Math.max(0, automaticBase + Number(adjustments[shift] || 0))
+
   const timePlan = useMemo(
-    () => allocateTime(remainingTasks, budgets[shift]),
-    [remainingTasks, budgets, shift],
+    () => allocateTime(remainingTasks, availableMinutes),
+    [remainingTasks, availableMinutes],
   )
 
   const setPriority = (id, priority) => {
@@ -150,9 +184,12 @@ export default function Root() {
     window.setTimeout(() => window.location.reload(), 450)
   }
 
-  const setBudget = value => {
-    const clean = value === '' ? '' : Math.max(0, Math.round(Number(value)))
-    setBudgets(current => ({ ...current, [shift]: clean }))
+  const adjustTime = amount => {
+    setAdjustments(current => ({ ...current, [shift]: Number(current[shift] || 0) + amount }))
+  }
+
+  const resetAdjustment = () => {
+    setAdjustments(current => ({ ...current, [shift]: 0 }))
   }
 
   return (
@@ -200,11 +237,12 @@ export default function Root() {
                 <div className="priority-task-list">
                   {visibleTasks.length ? visibleTasks.map(task => {
                     const routine = task.priority === 'required'
+                    const estimate = taskEstimate(task)
                     return (
                       <article className={`priority-task ${task.completed ? 'completed' : ''}`} key={task.id}>
                         <div className="priority-task-copy">
                           <strong>{task.title}</strong>
-                          <span>{task.completed ? 'Completed' : routine ? 'Required routine' : `${task.minutes || 15} min`}</span>
+                          <span>{task.completed ? 'Completed' : routine ? 'Required routine' : `Smart estimate: ${estimate.minutes} min`}</span>
                         </div>
                         {routine ? (
                           <span className="priority-routine">Routine</span>
@@ -230,7 +268,7 @@ export default function Root() {
                 </div>
 
                 <div className="priority-footer">
-                  <p>You can also say “urgent fill beer cooler” or “high priority work candy backstock” when using voice add.</p>
+                  <p>Task times are estimated automatically. You only need to name the work and choose its priority.</p>
                   <button className={saved ? 'saved' : ''} onClick={handleSave}>{saved ? 'Saved' : 'Save priorities'}</button>
                 </div>
               </>
@@ -240,44 +278,41 @@ export default function Root() {
               <>
                 <header className="priority-header time-header">
                   <div>
-                    <span className="priority-eyebrow">TIME BUDGET</span>
-                    <h2>Make the minutes fit</h2>
-                    <p>Enter how much time you have left. ShiftPilot divides it across unfinished tasks.</p>
+                    <span className="priority-eyebrow">AUTOMATIC TIME PLAN</span>
+                    <h2>ShiftPilot sets the pace</h2>
+                    <p>Task times and available minutes are calculated for you from the shift hours already entered.</p>
                   </div>
                   <button className="priority-close" onClick={() => setPanel(null)} aria-label="Close time budget">×</button>
                 </header>
 
                 <ShiftTabs shift={shift} setShift={setShift} />
 
-                <section className="budget-input-card">
-                  <label htmlFor="minutes-left">Minutes left this shift</label>
-                  <div className="budget-input-row">
-                    <input
-                      id="minutes-left"
-                      type="number"
-                      min="0"
-                      step="5"
-                      value={budgets[shift]}
-                      onChange={event => setBudget(event.target.value)}
-                    />
-                    <span>minutes</span>
+                <section className="budget-input-card auto-budget-card">
+                  <span className="auto-budget-label">Automatically available</span>
+                  <div className="auto-budget-time">{formatTime(availableMinutes)}</div>
+                  <p>
+                    {shiftHours > 0
+                      ? `Based on ${shiftHours} shift hours minus ${formatTime(completedEstimate)} of completed work.`
+                      : 'No shift hours are set, so the plan is using the smart task estimates.'}
+                  </p>
+                  <div className="budget-adjustments">
+                    <button onClick={() => adjustTime(-15)}>−15 min</button>
+                    <button className="reset" onClick={resetAdjustment}>Reset</button>
+                    <button onClick={() => adjustTime(15)}>+15 min</button>
                   </div>
-                  <div className="budget-presets">
-                    {[30, 60, 90, 120].map(minutes => (
-                      <button key={minutes} className={Number(budgets[shift]) === minutes ? 'active' : ''} onClick={() => setBudget(minutes)}>{minutes}</button>
-                    ))}
-                    <button onClick={() => setBudget(timePlan.estimateTotal)}>Use estimated</button>
-                  </div>
+                  {Number(adjustments[shift] || 0) !== 0 && (
+                    <small>Reality adjustment: {adjustments[shift] > 0 ? '+' : ''}{adjustments[shift]} minutes</small>
+                  )}
                 </section>
 
                 <div className={`budget-summary ${timePlan.tight ? 'tight' : 'comfortable'}`}>
-                  <div><span>Time available</span><strong>{formatTime(budgets[shift])}</strong></div>
-                  <div><span>Estimated work</span><strong>{formatTime(timePlan.estimateTotal)}</strong></div>
+                  <div><span>Time available</span><strong>{formatTime(availableMinutes)}</strong></div>
+                  <div><span>Smart estimate</span><strong>{formatTime(timePlan.estimateTotal)}</strong></div>
                   <div><span>{timePlan.tight ? 'Schedule' : 'Buffer'}</span><strong>{timePlan.tight ? 'Compressed' : formatTime(timePlan.buffer)}</strong></div>
                 </div>
 
                 {timePlan.tight && remainingTasks.length > 0 && (
-                  <p className="budget-warning">There is less time than the original estimates. Higher-priority work receives more of the available minutes.</p>
+                  <p className="budget-warning">There is less time than the smart estimates suggest. Higher-priority work receives more of the available minutes.</p>
                 )}
 
                 <div className="budget-task-list">
@@ -289,7 +324,7 @@ export default function Root() {
                           <strong>{item.task.title}</strong>
                           <span className={`budget-priority ${item.task.priority}`}>{item.task.priority === 'required' ? 'Routine' : item.task.priority}</span>
                         </div>
-                        <small>Original estimate: {item.task.minutes || 15} min</small>
+                        <small>Smart estimate: {item.estimate.minutes} min · {item.estimate.category}</small>
                       </div>
                       <div className="budget-minutes">
                         <strong>{item.minutes}</strong>
