@@ -1,0 +1,70 @@
+.auto-budget-card {
+  text-align: left;
+}
+
+.auto-budget-label {
+  display: block;
+  color: #0f766e;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.auto-budget-time {
+  margin-top: 3px;
+  color: #0b2239;
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: -.06em;
+}
+
+.auto-budget-card p {
+  margin: 7px 0 0;
+  color: #66758a;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.auto-budget-card small {
+  display: block;
+  margin-top: 10px;
+  color: #8b6515;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.budget-adjustments {
+  display: grid;
+  grid-template-columns: 1fr .8fr 1fr;
+  gap: 8px;
+  margin-top: 13px;
+}
+
+.budget-adjustments button {
+  min-height: 38px;
+  border: 1px solid #cfe4e1;
+  border-radius: 12px;
+  color: #0f766e;
+  background: white;
+  font-size: 10px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform .16s ease, background .18s ease, color .18s ease;
+}
+
+.budget-adjustments button:active {
+  transform: scale(.95);
+}
+
+.budget-adjustments button.reset {
+  color: #66758a;
+  border-color: #dfe5e7;
+  background: #f3f6f6;
+}
+
+@media (max-width: 420px) {
+  .auto-budget-time {
+    font-size: 34px;
+  }
+}
