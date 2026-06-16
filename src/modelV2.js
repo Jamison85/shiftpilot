@@ -36,6 +36,65 @@ const rules = [
   [/\b(call|text|email|message)\b/i, 5, 'Communication'], [/\b(check|inspect|verify|review)\b/i, 10, 'Check or review'],
 ];
 
+const DAY_TEMPLATES = {
+  0: {
+    name: 'Sunday Weekend Recovery',
+    truckDay: false,
+    tasks: [
+      ['Weekend recovery', 'morning', 30, 'high'],
+      ['Cooler and freezer recovery', 'mid', 25, 'normal'],
+    ],
+  },
+  1: {
+    name: 'Monday Office and Vendor Day',
+    truckDay: false,
+    tasks: [
+      ['Change order and receiving', 'morning', 30, 'high'],
+      ['MAP and signage review', 'morning', 25, 'normal'],
+    ],
+  },
+  2: {
+    name: 'Tuesday Follow-Up Day',
+    truckDay: false,
+    tasks: [
+      ['9 AM Teams follow-up', 'morning', 20, 'high'],
+      ['Inventory and audit follow-up', 'mid', 20, 'normal'],
+    ],
+  },
+  3: {
+    name: 'Wednesday Truck Day',
+    truckDay: true,
+    tasks: [
+      ['Truck unload and put-away', 'morning', 90, 'urgent'],
+      ['Truck backstock recovery', 'mid', 45, 'high'],
+    ],
+  },
+  4: {
+    name: 'Thursday Recovery Day',
+    truckDay: false,
+    tasks: [
+      ['Post-truck backstock recovery', 'morning', 35, 'high'],
+      ['Shelf tags and signage follow-up', 'mid', 25, 'normal'],
+    ],
+  },
+  5: {
+    name: 'Friday Weekend Readiness',
+    truckDay: false,
+    tasks: [
+      ['Weekend readiness walk', 'morning', 25, 'high'],
+      ['Cooler and fountain readiness', 'mid', 25, 'normal'],
+    ],
+  },
+  6: {
+    name: 'Saturday High-Traffic Recovery',
+    truckDay: false,
+    tasks: [
+      ['Weekend recovery', 'morning', 30, 'high'],
+      ['High-traffic stock fill', 'mid', 30, 'high'],
+    ],
+  },
+};
+
 export const nowDateKey = () => {
   const d = new Date();
   const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
@@ -43,6 +102,11 @@ export const nowDateKey = () => {
 };
 export const id = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 export const normalizeKey = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, '-');
+
+export function getDayTemplate(dateKey = nowDateKey()) {
+  const day = new Date(`${dateKey}T12:00:00`).getDay();
+  return DAY_TEMPLATES[day] || DAY_TEMPLATES[1];
+}
 
 export function defaultWalkItems() {
   return WALK_ITEMS.map(([idValue, label, parent]) => ({ id: idValue, label, parent: parent || null, checked: false }));
@@ -65,13 +129,44 @@ export function makeTask(title, shift, options = {}) {
     milestone: options.milestone || false, excluded: options.excluded || false, owner: options.owner || 'Me', type: options.type || 'custom',
     order: options.order ?? 99, walkItems: options.walkItems || null, handoff: options.handoff || false, createdAt: options.createdAt || new Date().toISOString(),
     estimateSource: options.estimateSource || 'smart', skipped: options.skipped || false,
+    templateName: options.templateName || null, templateDate: options.templateDate || null,
   };
 }
 
-export function defaultData() {
+export function defaultData(dateKey = nowDateKey()) {
+  const template = getDayTemplate(dateKey);
+  const templateTasks = template.tasks.map(([title, shift, minutes, priority], index) => makeTask(title, shift, {
+    id: `template-${dateKey}-${index}`,
+    type: 'template',
+    minutes,
+    priority,
+    order: 10 + index,
+    templateName: template.name,
+    templateDate: dateKey,
+  }));
+  let tasks = [...seedTasks(), ...templateTasks];
+  if (template.truckDay) {
+    tasks = tasks.map(task => task.type === 'bookwork' ? {
+      ...task,
+      excluded: true,
+      owner: 'Loretta',
+      completed: false,
+      completedAt: null,
+    } : task);
+  }
+
   return {
-    date: nowDateKey(), truckDay: false, activeShift: currentShift(), shiftHours: { morning: 8, mid: 8, night: 8 },
-    tasks: seedTasks(), handoffNotes: { morning: '', mid: '', night: '' }, extraCompleted: [], history: [], celebrated: {}, interruptions: [],
+    date: dateKey,
+    truckDay: template.truckDay,
+    templateName: template.name,
+    activeShift: currentShift(),
+    shiftHours: { morning: 8, mid: 8, night: 8 },
+    tasks,
+    handoffNotes: { morning: '', mid: '', night: '' },
+    extraCompleted: [],
+    history: [],
+    celebrated: {},
+    interruptions: [],
   };
 }
 
@@ -87,10 +182,13 @@ export function loadData() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (!saved) return defaultData();
-    const migrated = { ...defaultData(), ...saved, tasks: (saved.tasks || seedTasks()).map(migrateTask), interruptions: saved.interruptions || [] };
+    const migrated = { ...defaultData(saved.date || nowDateKey()), ...saved, tasks: (saved.tasks || seedTasks()).map(migrateTask), interruptions: saved.interruptions || [] };
     if (migrated.date !== nowDateKey()) {
       const snapshot = snapshotDay(migrated);
-      return { ...defaultData(), history: [snapshot, ...(migrated.history || [])].slice(0, 30) };
+      return {
+        ...defaultData(),
+        history: [snapshot, ...(migrated.history || []).filter(item => item.date !== snapshot.date)].slice(0, 30),
+      };
     }
     return migrated;
   } catch { return defaultData(); }
@@ -131,7 +229,7 @@ export function estimateTask(task, learning = {}) {
   if (task.actualMinutes && task.completed) return { minutes: task.actualMinutes, category: 'Actual time', source: 'actual' };
   const learned = learning[normalizeKey(task.title)];
   if (learned?.count >= 2) return { minutes: Math.max(5, Math.round(learned.average / 5) * 5), category: `Learned from ${learned.count} finishes`, source: 'learned' };
-  if (task.type !== 'custom') return { minutes: Number(task.minutes) || 15, category: 'Required routine', source: 'fixed' };
+  if (task.type !== 'custom') return { minutes: Number(task.minutes) || 15, category: task.type === 'template' ? 'Day template' : 'Required routine', source: 'fixed' };
   if (task.estimateSource === 'explicit' && Number(task.minutes)) return { minutes: Number(task.minutes), category: 'Time you specified', source: 'explicit' };
   const text = task.title || '';
   const explicit = text.match(/\b(\d+(?:\.\d+)?)\s*(minutes?|mins?|hours?|hrs?)\b/i);
@@ -254,7 +352,24 @@ export function buildPlan(data, prefs, learning, shift = data.activeShift, now =
 }
 
 export function snapshotDay(data) {
-  return { date: data.date, completed: data.tasks.filter(t => t.completed && !t.excluded).map(t => t.title), extras: data.extraCompleted || [], truckDay: data.truckDay, savedAt: new Date().toISOString() };
+  return {
+    date: data.date,
+    completed: data.tasks.filter(task => task.completed && !task.excluded).map(task => task.title),
+    unfinished: data.tasks.filter(task => !task.completed && !task.excluded).map(task => ({
+      title: task.title,
+      shift: task.shift,
+      priority: task.priority,
+      skipped: !!task.skipped,
+      handoff: !!task.handoff,
+      type: task.type,
+    })),
+    extras: data.extraCompleted || [],
+    interruptions: data.interruptions || [],
+    handoffNotes: data.handoffNotes || {},
+    templateName: data.templateName || null,
+    truckDay: data.truckDay,
+    savedAt: new Date().toISOString(),
+  };
 }
 
 export function parseVoiceCommand(raw, activeShift) {
