@@ -4,6 +4,7 @@ import {
   makeTask, sortTasks, estimateTask, buildPlan, updateLearning, formatDuration, formatTime, parseVoiceCommand, findTask,
   parseSpokenTime, snapshotDay, id,
 } from './modelV2.js';
+import { DayTemplateBanner, HandoffIntelligence, ManagerInsights } from './ManagementPanels.jsx';
 
 const INTERRUPTIONS = [
   ['Register backup', 10, 'register'], ['Customer issue', 10, 'customer'], ['Vendor', 15, 'vendor'],
@@ -279,7 +280,7 @@ export default function AppV2() {
 
       {tab === 'tasks' && <TasksPage data={data} learning={learning} activeShift={activeShift} setActiveShift={setActiveShift} setData={setData} addTask={()=>setSheet('manual')} openWalk={taskId=>setSheet({type:'walk',taskId})} completeTask={completeTask} undoComplete={undoComplete}/>} 
       {tab === 'handoff' && <HandoffPage data={data} activeShift={activeShift} setData={setData} handoffText={handoffText()} summaryText={dailySummaryText()} share={share} extraText={extraText} setExtraText={setExtraText}/>} 
-      {tab === 'history' && <HistoryPage history={data.history||[]} learning={learning}/>} 
+      {tab === 'history' && <HistoryPage data={data} learning={learning} share={share}/>} 
     </main>
 
     <nav className="sp-nav">
@@ -313,6 +314,7 @@ function CompactTask({ item, index, onFocus, onComplete, onWalk }) {
 function TasksPage({ data, learning, activeShift, setActiveShift, setData, addTask, openWalk, completeTask, undoComplete }) {
   return <section className="sp-page sp-page-enter"><div className="sp-page-head"><div><span className="sp-kicker dark">PLAN THE WORK</span><h1>Tasks</h1></div><button className="sp-small-primary" onClick={addTask}><Icon name="plus" size={18}/> Add</button></div>
     <div className="sp-shift-tabs light">{SHIFT_ORDER.map(shift=><button key={shift} className={shift===activeShift?'active':''} onClick={()=>setActiveShift(shift)}>{SHIFT_LABELS[shift]}</button>)}</div>
+    <DayTemplateBanner data={data}/>
     <div className="sp-hours-card"><div><span>AVAILABLE LABOR HOURS</span><strong>{data.shiftHours?.[activeShift] || 0}</strong></div><input type="number" min="0" step=".25" value={data.shiftHours?.[activeShift]??''} onChange={e=>setData(current=>({...current,shiftHours:{...current.shiftHours,[activeShift]:e.target.value===''?'':Math.max(0,Number(e.target.value))}}))}/></div>
     <div className="sp-task-stack">{sortTasks(data.tasks.filter(t=>t.shift===activeShift&&!t.excluded)).map(task=>{
       const estimate=estimateTask(task,learning); return <article className={`sp-task-row ${task.completed?'done':''} ${task.skipped?'skipped':''}`} key={task.id}>
@@ -327,6 +329,7 @@ function TasksPage({ data, learning, activeShift, setActiveShift, setData, addTa
 function HandoffPage({ data, activeShift, setData, handoffText, summaryText, share, extraText, setExtraText }) {
   const completed=data.tasks.filter(t=>t.completed&&!t.excluded).map(t=>t.title);
   return <section className="sp-page sp-page-enter"><div className="sp-page-head"><div><span className="sp-kicker dark">WRAP IT UP</span><h1>Handoff</h1></div></div>
+    <HandoffIntelligence data={data} activeShift={activeShift} setData={setData}/>
     <article className="sp-report"><span className="sp-report-label">SHIFT HANDOFF</span><h2>{SHIFT_LABELS[activeShift]} shift</h2><p>Unfinished or marked items are included automatically.</p>
       <textarea value={data.handoffNotes?.[activeShift]||''} onChange={e=>setData(current=>({...current,handoffNotes:{...current.handoffNotes,[activeShift]:e.target.value}}))} placeholder="Shortages, issues, or notes…"/>
       <pre>{handoffText}</pre><button onClick={()=>share('Shift Handoff',handoffText)}><Icon name="share"/> Share handoff</button></article>
@@ -336,11 +339,13 @@ function HandoffPage({ data, activeShift, setData, handoffText, summaryText, sha
   </section>;
 }
 
-function HistoryPage({ history, learning }) {
+function HistoryPage({ data, learning, share }) {
+  const history=data.history||[];
   const learned=Object.values(learning).sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0,4);
-  return <section className="sp-page sp-page-enter"><div className="sp-page-head"><div><span className="sp-kicker dark">WHAT SHIFTPILOT LEARNED</span><h1>History</h1></div></div>
+  return <section className="sp-page sp-page-enter"><div className="sp-page-head"><div><span className="sp-kicker dark">MANAGER RECORDS</span><h1>History</h1></div></div>
+    <ManagerInsights data={data} learning={learning} share={share}/>
     {learned.length>0&&<div className="sp-learning-card"><h2>Your real pace</h2>{learned.map(item=><div key={item.title}><strong>{item.title}</strong><span>{item.average} min average · {item.count} finishes</span></div>)}</div>}
-    <div className="sp-history-list">{history.length?history.map((day,i)=><article key={`${day.date}-${i}`}><time>{new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(new Date(`${day.date}T12:00:00`))}</time><div><strong>{day.completed.length+(day.extras?.length||0)} completed</strong><span>{[...day.completed,...(day.extras||[])].slice(0,4).join(' · ')}</span></div></article>):<div className="sp-empty-list large">No saved days yet.</div>}</div>
+    <div className="sp-history-list">{history.length?history.map((day,i)=><article key={`${day.date}-${i}`}><time>{new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(new Date(`${day.date}T12:00:00`))}</time><div><strong>{day.completed.length+(day.extras?.length||0)} completed</strong><span>{[...day.completed,...(day.extras||[])].slice(0,4).join(' · ')}</span><div className="mg-history-meta">{day.unfinished?.length||0} unfinished · {(day.interruptions||[]).reduce((sum,item)=>sum+(Number(item.minutes)||0),0)} interruption minutes{day.templateName?` · ${day.templateName}`:''}</div></div></article>):<div className="sp-empty-list large">No saved days yet.</div>}</div>
   </section>;
 }
 
