@@ -52,7 +52,7 @@ export function seedTasks() {
   return [
     makeTask('Bookwork', 'morning', { id: 'bookwork', type: 'bookwork', minutes: 45, priority: 'required', milestone: true, order: 0 }),
     makeTask('Smart Counts', 'morning', { id: 'smart-counts', type: 'smart-counts', minutes: 30, priority: 'required', milestone: true, order: 1 }),
-    ...SHIFT_ORDER.map((shift, index) => makeTask(`${SHIFT_LABELS[shift]} Daily Walk`, shift, {
+    ...SHIFT_ORDER.map((shift) => makeTask(`${SHIFT_LABELS[shift]} Daily Walk`, shift, {
       id: `${shift}-walk`, type: 'walk', minutes: 20, priority: 'required', order: shift === 'morning' ? 2 : 0, walkItems: defaultWalkItems(),
     })),
   ];
@@ -154,6 +154,7 @@ export function updateLearning(learning, task, actualMinutes) {
 
 export function sortTasks(tasks) {
   return [...tasks].sort((a, b) => {
+    if (!!a.skipped !== !!b.skipped) return a.skipped ? 1 : -1;
     const p = (priorityRank[a.priority] ?? 3) - (priorityRank[b.priority] ?? 3);
     if (p) return p;
     return (a.order ?? 99) - (b.order ?? 99);
@@ -177,7 +178,7 @@ export function formatDuration(mins) {
 }
 
 export function buildPlan(data, prefs, learning, shift = data.activeShift, now = new Date()) {
-  const remaining = sortTasks(data.tasks.filter(t => t.shift === shift && !t.completed && !t.excluded && !t.skipped));
+  const remaining = sortTasks(data.tasks.filter(t => t.shift === shift && !t.completed && !t.excluded));
   const estimates = remaining.map(task => ({ task, estimate: estimateTask(task, learning) }));
   const estimateTotal = estimates.reduce((sum, x) => sum + x.estimate.minutes, 0);
   const clockOut = parseClock(data.date, prefs.clockOut?.[shift]);
