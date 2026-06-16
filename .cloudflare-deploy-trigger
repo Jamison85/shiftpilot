@@ -1,0 +1,1 @@
+Deploy the latest main branch configuration with wrangler.jsonc and static assets from ./dist.
