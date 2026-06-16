@@ -177,6 +177,46 @@ export function formatDuration(mins) {
   return h ? (m ? `${h}h ${m}m` : `${h}h`) : `${m}m`;
 }
 
+function minimumFocusBlock(estimateMinutes) {
+  const estimate = Math.max(1, Math.round(Number(estimateMinutes) || 1));
+  if (estimate <= 5) return estimate;
+  if (estimate <= 10) return 5;
+  return Math.min(estimate, Math.max(10, Math.ceil((estimate * 0.6) / 5) * 5));
+}
+
+function allocateRealisticBlocks(estimates, availableMinutes) {
+  const fullTotal = estimates.reduce((sum, item) => sum + item.estimate.minutes, 0);
+  if (availableMinutes >= fullTotal) return estimates.map(item => ({ ...item, allotted: item.estimate.minutes, compressed: false }));
+
+  const allocated = estimates.map(item => ({
+    ...item,
+    allotted: minimumFocusBlock(item.estimate.minutes),
+    compressed: true,
+  }));
+  const minimumTotal = allocated.reduce((sum, item) => sum + item.allotted, 0);
+
+  if (availableMinutes <= minimumTotal) return allocated;
+
+  let extra = availableMinutes - minimumTotal;
+  while (extra > 0) {
+    const eligible = allocated
+      .map((item, index) => ({ item, index, room: item.estimate.minutes - item.allotted }))
+      .filter(entry => entry.room > 0)
+      .sort((a, b) => {
+        const priority = (priorityRank[a.item.task.priority] ?? 3) - (priorityRank[b.item.task.priority] ?? 3);
+        if (priority) return priority;
+        return b.room - a.room;
+      });
+    if (!eligible.length) break;
+    for (const entry of eligible) {
+      if (extra <= 0) break;
+      allocated[entry.index].allotted += 1;
+      extra -= 1;
+    }
+  }
+  return allocated;
+}
+
 export function buildPlan(data, prefs, learning, shift = data.activeShift, now = new Date()) {
   const remaining = sortTasks(data.tasks.filter(t => t.shift === shift && !t.completed && !t.excluded));
   const estimates = remaining.map(task => ({ task, estimate: estimateTask(task, learning) }));
@@ -187,22 +227,10 @@ export function buildPlan(data, prefs, learning, shift = data.activeShift, now =
   const effectiveAvailable = Math.max(0, available);
 
   if (!estimates.length) return { items: [], estimateTotal: 0, available: effectiveAvailable, clockOut, behindBy: 0, aheadBy: effectiveAvailable, interruptionMinutes };
+
+  const allocated = allocateRealisticBlocks(estimates, effectiveAvailable);
+  const allocatedTotal = allocated.reduce((sum, item) => sum + item.allotted, 0);
   const tight = estimateTotal > effectiveAvailable;
-  let allocated;
-  if (!tight) allocated = estimates.map(x => ({ ...x, allotted: x.estimate.minutes }));
-  else {
-    const count = estimates.length;
-    const minEach = effectiveAvailable >= count * 5 ? 5 : effectiveAvailable >= count ? 1 : 0;
-    const flexible = Math.max(0, effectiveAvailable - minEach * count);
-    const weighted = estimates.map(x => x.estimate.minutes * (priorityWeight[x.task.priority] || 1));
-    const totalWeight = weighted.reduce((a, b) => a + b, 0) || 1;
-    const raw = weighted.map(w => flexible * w / totalWeight);
-    const floors = raw.map(Math.floor);
-    let remainder = flexible - floors.reduce((a, b) => a + b, 0);
-    const fractions = raw.map((v, i) => ({ i, f: v - floors[i] })).sort((a, b) => b.f - a.f);
-    for (let i = 0; i < remainder; i++) floors[fractions[i % fractions.length].i] += 1;
-    allocated = estimates.map((x, i) => ({ ...x, allotted: minEach + floors[i] }));
-  }
   let cursor = now;
   const items = allocated.map((item, index) => {
     const start = cursor;
@@ -210,9 +238,18 @@ export function buildPlan(data, prefs, learning, shift = data.activeShift, now =
     cursor = finish;
     return { ...item, index, start, finish };
   });
+
   return {
-    items, estimateTotal, available: effectiveAvailable, clockOut, tight,
-    behindBy: Math.max(0, estimateTotal - effectiveAvailable), aheadBy: Math.max(0, effectiveAvailable - estimateTotal), interruptionMinutes,
+    items,
+    estimateTotal,
+    allocatedTotal,
+    available: effectiveAvailable,
+    clockOut,
+    tight,
+    minimumOverrun: Math.max(0, allocatedTotal - effectiveAvailable),
+    behindBy: Math.max(0, estimateTotal - effectiveAvailable),
+    aheadBy: Math.max(0, effectiveAvailable - estimateTotal),
+    interruptionMinutes,
   };
 }
 
