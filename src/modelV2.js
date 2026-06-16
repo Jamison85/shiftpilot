@@ -18,12 +18,14 @@ const rules = [
   [/\b(bookwork|books|daily books|cash reconciliation)\b/i, 45, 'Bookwork'],
   [/\bsmart counts?\b/i, 30, 'Smart Counts'],
   [/\b(daily walk|store walk|walk routine|walkthrough)\b/i, 20, 'Store walk'],
+  [/\b(cigarette|tobacco)\b.*\baudit\b|\baudit\b.*\b(cigarette|tobacco)\b/i, 120, 'Cigarette audit'],
+  [/\bouts?\b/i, 60, 'Outs'],
   [/\b(truck|put away delivery|unload|freight)\b/i, 90, 'Truck work'],
   [/\b(reset|planogram|pog|display|power wing|endcap)\b/i, 45, 'Reset or display'],
   [/\b(candy backstock|work candy|stock candy|candy aisle)\b/i, 30, 'Candy stocking'],
   [/\b(beer cooler|stock beer|fill beer)\b/i, 30, 'Beer cooler'],
   [/\b(cooler|freezer)\b.*\b(stock|fill|work|organize)\b|\b(stock|fill|work|organize)\b.*\b(cooler|freezer)\b/i, 25, 'Cooler or freezer'],
-  [/\b(cigarette|tobacco)\b.*\b(count|audit|inventory)\b|\b(count|audit|inventory)\b.*\b(cigarette|tobacco)\b/i, 25, 'Tobacco count'],
+  [/\b(cigarette|tobacco)\b.*\b(count|inventory)\b|\b(count|inventory)\b.*\b(cigarette|tobacco)\b/i, 25, 'Tobacco count'],
   [/\b(count|audit|inventory)\b/i, 20, 'Count or audit'],
   [/\b(price tags?|shelf tags?|missing tags?|map|signage)\b/i, 25, 'Tags and signage'],
   [/\b(bibs?|bag[- ]?in[- ]?box|soda boxes?)\b/i, 12, 'BIBs'],
@@ -38,27 +40,32 @@ const rules = [
 
 const DAY_TEMPLATES = {
   0: {
-    name: 'Sunday Weekend Recovery',
+    name: 'Sunday Outs and Weekend Recovery',
     truckDay: false,
     tasks: [
       ['Weekend recovery', 'morning', 30, 'high'],
       ['Cooler and freezer recovery', 'mid', 25, 'normal'],
+      ['Complete outs — may be done during day or night, due before close', 'night', 60, 'urgent'],
     ],
   },
   1: {
-    name: 'Monday Office and Vendor Day',
+    name: 'Monday Store Order and Office Day',
     truckDay: false,
     tasks: [
+      ['Submit store order by 2:00 PM', 'morning', 45, 'urgent'],
       ['Change order and receiving', 'morning', 30, 'high'],
       ['MAP and signage review', 'morning', 25, 'normal'],
     ],
   },
   2: {
-    name: 'Tuesday Follow-Up Day',
+    name: 'Tuesday Cigarette Audit and Truck Prep',
     truckDay: false,
+    lorettaHandles: ['bookwork', 'smart-counts'],
     tasks: [
-      ['9 AM Teams follow-up', 'morning', 20, 'high'],
-      ['Inventory and audit follow-up', 'mid', 20, 'normal'],
+      ['Cigarette Audits', 'morning', 120, 'urgent'],
+      ['Work as much backstock to the sales floor as possible', 'mid', 60, 'high'],
+      ['Organize the backstock room', 'mid', 30, 'high'],
+      ['Prepare for Wednesday truck — move carts and dollies by the door and clear the back-room walkway', 'night', 20, 'high'],
     ],
   },
   3: {
@@ -145,8 +152,12 @@ export function defaultData(dateKey = nowDateKey()) {
     templateDate: dateKey,
   }));
   let tasks = [...seedTasks(), ...templateTasks];
-  if (template.truckDay) {
-    tasks = tasks.map(task => task.type === 'bookwork' ? {
+  const lorettaHandles = new Set([
+    ...(template.truckDay ? ['bookwork'] : []),
+    ...(template.lorettaHandles || []),
+  ]);
+  if (lorettaHandles.size) {
+    tasks = tasks.map(task => lorettaHandles.has(task.id) ? {
       ...task,
       excluded: true,
       owner: 'Loretta',
