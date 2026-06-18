@@ -1,1 +1,83 @@
-/* Deprecated. Final visual styling now lives in premium-theme.css. */
+/*
+  Final touch layer.
+  Imported last on purpose: this is for tiny fit-and-finish details that should win over base theme rules.
+*/
+
+.sp-now-details {
+  gap: 7px !important;
+}
+
+.sp-now-details > span {
+  min-height: 30px !important;
+  padding: 7px 10px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid rgba(16, 37, 56, 0.1) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 6px 14px rgba(16, 37, 56, 0.06) !important;
+  color: #52616b !important;
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+.sp-now-details > span svg {
+  flex: 0 0 auto !important;
+  opacity: 0.78 !important;
+}
+
+.sp-now-details .sp-priority {
+  min-height: 30px !important;
+  padding: 7px 11px !important;
+  border-radius: 999px !important;
+  box-shadow: 0 6px 14px rgba(16, 37, 56, 0.06) !important;
+}
+
+.sp-now-card h2 {
+  font-size: clamp(30px, 8.8vw, 42px) !important;
+  line-height: 0.98 !important;
+  max-width: 100% !important;
+}
+
+.sp-focus-start {
+  margin-top: 20px !important;
+}
+
+.sp-nav {
+  bottom: max(12px, env(safe-area-inset-bottom)) !important;
+}
+
+.sp-app {
+  padding-bottom: 118px !important;
+}
+
+.sp-status-grid article {
+  overflow: hidden !important;
+}
+
+.sp-status-grid strong {
+  line-height: 1.05 !important;
+}
+
+.sp-hero-status strong {
+  line-height: 1.08 !important;
+}
+
+.sp-hero-status > div {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 380px) {
+  .sp-now-card h2 {
+    font-size: 29px !important;
+  }
+
+  .sp-now-details > span,
+  .sp-now-details .sp-priority {
+    font-size: 10px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
