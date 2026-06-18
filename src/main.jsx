@@ -4,7 +4,7 @@ import AppV2 from './AppV2.jsx';
 import './appV2.css';
 import './managementV3.css';
 import './finishPolish.css';
-import './sage-theme.css';
+import './premium-theme.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode><AppV2 /></React.StrictMode>
