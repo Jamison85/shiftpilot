@@ -1,0 +1,641 @@
+:root {
+  --cream: #f8f1e7;
+  --cream2: #fffaf2;
+  --bg: #f8f1e7;
+  --paper: rgba(255, 255, 255, 0.86);
+  --surface: rgba(255, 255, 255, 0.82);
+  --surface-strong: #ffffff;
+  --ink: #122b3d;
+  --ink2: #1b3a50;
+  --navy: #122b3d;
+  --muted: #6f7a84;
+  --muted2: #6f7a84;
+  --line: rgba(18, 43, 61, 0.12);
+  --teal: #b66f3c;
+  --teal2: #dfa45f;
+  --tealSoft: #fff0df;
+  --green: #74896d;
+  --success: #74896d;
+  --successSoft: #eef4e9;
+  --gold: #e7b957;
+  --goldSoft: #fff4d3;
+  --coral: #d77a4a;
+  --red: #c6535a;
+  --redSoft: #fff0f1;
+  --shadow: 0 20px 50px rgba(18, 43, 61, 0.12);
+  --shadow2: 0 34px 80px rgba(18, 43, 61, 0.2);
+  --radius-xl: 30px;
+  --radius-lg: 23px;
+  --radius-md: 17px;
+}
+
+html {
+  background: radial-gradient(circle at 18% -8%, rgba(223, 164, 95, 0.2), transparent 34%),
+    radial-gradient(circle at 90% 0%, rgba(18, 43, 61, 0.1), transparent 30%),
+    linear-gradient(180deg, #fffaf2 0%, #f8f1e7 42%, #efe4d6 100%) !important;
+}
+
+body {
+  background: transparent !important;
+  color: var(--ink) !important;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid rgba(223, 164, 95, 0.38) !important;
+  outline-offset: 2px;
+}
+
+.sp-app,
+.app-shell {
+  background: radial-gradient(circle at 90% -12%, rgba(231, 185, 87, 0.25), transparent 34%),
+    radial-gradient(circle at -10% 12%, rgba(18, 43, 61, 0.1), transparent 30%),
+    linear-gradient(180deg, #fffaf2 0%, #f8f1e7 46%, #efe4d6 100%) !important;
+}
+
+.sp-app::before,
+.ambient-one {
+  background: radial-gradient(circle, rgba(223, 164, 95, 0.22), transparent 68%) !important;
+}
+
+.sp-app::after,
+.ambient-two {
+  background: radial-gradient(circle, rgba(18, 43, 61, 0.1), transparent 70%) !important;
+}
+
+.sp-topbar,
+.topbar {
+  background: linear-gradient(180deg, rgba(255, 250, 242, 0.94), rgba(255, 250, 242, 0.68)) !important;
+  border-bottom: 1px solid rgba(18, 43, 61, 0.07) !important;
+  box-shadow: 0 10px 28px rgba(18, 43, 61, 0.06) !important;
+}
+
+.sp-logo,
+.brand-mark {
+  background: linear-gradient(145deg, #122b3d 0%, #1f4058 58%, #dfa45f 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 16px 36px rgba(18, 43, 61, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.36) !important;
+}
+
+.sp-brand strong,
+.brand-copy strong,
+.sp-page-head h1,
+.sp-section-title h2,
+.section-heading h2,
+.page-title h1,
+.sp-now-card h2,
+.sp-task-row strong,
+.sp-compact-task strong,
+.mg-card-head h2,
+.sp-report h2,
+.sp-sheet-head h2 {
+  color: var(--ink) !important;
+  letter-spacing: -0.055em !important;
+}
+
+.sp-brand span,
+.brand-copy span,
+.sp-now-details > span,
+.sp-status-grid small,
+.sp-task-row small,
+.sp-compact-task small,
+.sp-report p,
+.mg-card-head p,
+.sp-sheet-head p,
+.sp-empty-list,
+.sp-empty-now p {
+  color: var(--muted) !important;
+}
+
+.sp-page,
+.page {
+  padding-top: 14px !important;
+}
+
+.sp-hero,
+.hero-card {
+  border: 1px solid rgba(255, 255, 255, 0.52) !important;
+  background: linear-gradient(145deg, #102638 0%, #132f43 44%, #243f53 100%) !important;
+  box-shadow: 0 34px 80px rgba(18, 43, 61, 0.28) !important;
+  color: #fff !important;
+}
+
+.sp-hero::before {
+  background: rgba(223, 164, 95, 0.24) !important;
+}
+
+.sp-hero::after,
+.hero-card::after {
+  background: rgba(223, 164, 95, 0.16) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.sp-hero h1,
+.hero-card h1 {
+  color: #fff !important;
+  letter-spacing: -0.075em !important;
+}
+
+.sp-kicker,
+.sp-kicker.dark,
+.sp-section-title span,
+.sp-page-head span,
+.section-heading span,
+.page-title .eyebrow,
+.planner-header span,
+.report-heading > span,
+.sheet-title > div > span,
+.sp-report-label,
+.sp-now-head span,
+.sp-hours-card span,
+.mg-template-card span,
+.mg-card-head span {
+  color: #b66f3c !important;
+}
+
+.sp-hero .sp-kicker,
+.sp-hero-status span,
+.hero-card .eyebrow {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+.sp-truck,
+.truck-toggle {
+  background: rgba(255, 255, 255, 0.11) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+.sp-truck input:checked + span,
+.truck-toggle input:checked + .toggle-track {
+  background: #dfa45f !important;
+}
+
+.sp-shift-tabs {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.sp-shift-tabs button {
+  color: rgba(255, 255, 255, 0.74) !important;
+}
+
+.sp-shift-tabs button.active {
+  background: #fff !important;
+  color: var(--ink) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16) !important;
+}
+
+.sp-shift-tabs.light {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: 0 12px 24px rgba(18, 43, 61, 0.06) !important;
+}
+
+.sp-shift-tabs.light button {
+  color: var(--muted) !important;
+}
+
+.sp-shift-tabs.light button.active {
+  background: var(--ink) !important;
+  color: #fff !important;
+}
+
+.sp-hero-status > div {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.sp-hero-status .ahead {
+  background: rgba(116, 137, 109, 0.2) !important;
+  border-color: rgba(116, 137, 109, 0.3) !important;
+}
+
+.sp-hero-status .ahead strong {
+  color: #e4f0de !important;
+}
+
+.sp-hero-status .behind {
+  background: rgba(214, 122, 74, 0.2) !important;
+  border-color: rgba(214, 122, 74, 0.34) !important;
+}
+
+.sp-voice,
+.voice-hero {
+  border: 1px solid rgba(255, 255, 255, 0.68) !important;
+  background: linear-gradient(145deg, #b66f3c, #dfa45f) !important;
+  box-shadow: 0 22px 44px rgba(182, 111, 60, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  color: #fff !important;
+}
+
+.sp-voice > span,
+.voice-icon,
+.listening-orb span {
+  color: #b66f3c !important;
+  background: #fff !important;
+}
+
+.sp-now-card,
+.next-card {
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 255, 255, 0.76) !important;
+  background: linear-gradient(145deg, rgba(255,255,255,0.94), rgba(255,247,235,0.82)) !important;
+  box-shadow: 0 24px 58px rgba(18, 43, 61, 0.13) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.sp-now-card::before {
+  background: linear-gradient(90deg, #b66f3c, #dfa45f, #e7b957) !important;
+}
+
+.sp-now-head b {
+  background: #fff0df !important;
+  color: #8e512d !important;
+  border: 1px solid rgba(182, 111, 60, 0.12) !important;
+}
+
+.sp-now-details > span,
+.task-meta span {
+  background: #fff !important;
+  border: 1px solid var(--line) !important;
+}
+
+.sp-focus-start,
+.sp-wide-primary,
+.sp-small-primary,
+.primary-action,
+.complete-now,
+.sp-report button:not(.sp-sheet-close),
+.mg-card-head > button {
+  background: linear-gradient(145deg, #b66f3c, #dfa45f) !important;
+  color: #fff !important;
+  box-shadow: 0 18px 36px rgba(182, 111, 60, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+}
+
+.sp-focus-start,
+.sp-wide-primary {
+  min-height: 54px !important;
+  border-radius: 18px !important;
+}
+
+.sp-status-grid article,
+.metric-card,
+.sp-plan-button,
+.sp-task-row,
+.sp-compact-task,
+.sp-report,
+.sp-learning-card,
+.sp-hours-card,
+.planner-card,
+.report-card,
+.mg-template-card,
+.mg-handoff-card,
+.mg-problem-card {
+  border: 1px solid rgba(255, 255, 255, 0.72) !important;
+  background: rgba(255, 255, 255, 0.78) !important;
+  box-shadow: 0 18px 42px rgba(18, 43, 61, 0.1) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+.sp-status-grid article,
+.metric-card {
+  border-radius: 24px !important;
+}
+
+.sp-status-grid span,
+.metric-card > span {
+  color: var(--muted) !important;
+}
+
+.sp-status-grid strong,
+.metric-card strong {
+  color: var(--ink) !important;
+}
+
+.sp-progress,
+.mini-progress,
+.capacity-line {
+  background: #eadfd2 !important;
+}
+
+.sp-progress i,
+.mini-progress span,
+.capacity-line span {
+  background: linear-gradient(90deg, #b66f3c, #dfa45f) !important;
+  box-shadow: 0 0 18px rgba(182, 111, 60, 0.28) !important;
+}
+
+.sp-plan-button {
+  grid-template-columns: 46px 1fr auto !important;
+  min-height: 76px !important;
+  border-radius: 26px !important;
+}
+
+.sp-plan-button > svg:first-child,
+.next-icon {
+  background: linear-gradient(145deg, #122b3d, #243f53) !important;
+  color: #fff !important;
+  box-shadow: 0 14px 28px rgba(18, 43, 61, 0.22) !important;
+}
+
+.sp-plan-button > svg:last-child,
+.text-button,
+.metric-card button,
+.sp-section-title button,
+.sp-row-action,
+.completed-chips button {
+  color: #b66f3c !important;
+}
+
+.sp-section-title button,
+.sp-row-action,
+.pill.required,
+.sp-priority.required,
+.completed-chips > span {
+  background: #fff0df !important;
+  color: #9b5b32 !important;
+  border: 1px solid rgba(182, 111, 60, 0.12) !important;
+}
+
+.sp-priority.urgent,
+.pill.urgent {
+  background: #fff0f1 !important;
+  color: #a33c43 !important;
+}
+
+.sp-priority.high {
+  background: var(--goldSoft) !important;
+  color: #8a6413 !important;
+}
+
+.sp-priority.normal,
+.sp-priority.low {
+  background: #eff2f2 !important;
+  color: var(--muted) !important;
+}
+
+.sp-compact-task,
+.sp-task-row,
+.task-card {
+  border-radius: 21px !important;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border 0.16s ease !important;
+}
+
+.sp-compact-task:active,
+.sp-task-row:active,
+.task-card:active {
+  transform: scale(0.99) !important;
+}
+
+.sp-seq {
+  background: var(--ink) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 22px rgba(18, 43, 61, 0.18) !important;
+}
+
+.sp-dot.required,
+.sp-dot.normal,
+.sp-dot.low {
+  background: #b66f3c !important;
+}
+
+.sp-dot.urgent {
+  background: var(--red) !important;
+}
+
+.sp-task-row.done,
+.task-card.is-complete,
+.walk-row.checked,
+.mg-suggestion-list article.included {
+  background: rgba(238, 244, 233, 0.82) !important;
+  border-color: rgba(116, 137, 109, 0.22) !important;
+}
+
+.sp-task-row.done .sp-check,
+.task-card.is-complete .task-check,
+.walk-row.checked .walk-check {
+  background: #74896d !important;
+  border-color: #74896d !important;
+}
+
+.sp-check,
+.task-check,
+.walk-check {
+  background: #fff !important;
+  border-color: rgba(18, 43, 61, 0.16) !important;
+  box-shadow: 0 8px 18px rgba(18, 43, 61, 0.08) !important;
+}
+
+.status-good,
+.sp-learned,
+.walk-row.checked,
+.walk-row.child.checked,
+.empty-state > div {
+  color: #74896d !important;
+}
+
+.sp-nav,
+.bottom-nav {
+  border: 1px solid rgba(255, 255, 255, 0.78) !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  box-shadow: 0 24px 60px rgba(18, 43, 61, 0.18) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+.sp-nav button,
+.bottom-nav > button {
+  color: var(--muted) !important;
+}
+
+.sp-nav button.active,
+.bottom-nav > button.active {
+  color: #b66f3c !important;
+}
+
+.sp-nav-mic span,
+.nav-mic span {
+  background: linear-gradient(145deg, #122b3d, #243f53) !important;
+  color: #fff !important;
+  box-shadow: 0 16px 34px rgba(18, 43, 61, 0.28), 0 0 0 7px var(--cream) !important;
+}
+
+.sp-sheet-bg,
+.sheet-backdrop {
+  background: rgba(18, 43, 61, 0.38) !important;
+  backdrop-filter: blur(13px) !important;
+}
+
+.sp-sheet,
+.bottom-sheet {
+  background: linear-gradient(180deg, #fffaf4, #f8f1e7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.76) !important;
+  box-shadow: 0 -30px 76px rgba(18, 43, 61, 0.28) !important;
+}
+
+.sp-grabber,
+.sheet-grabber {
+  background: #d8cdbf !important;
+}
+
+.sp-sheet-close,
+.sheet-title .icon-button {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid var(--line) !important;
+}
+
+.sp-plan-tabs,
+.shift-tabs.light {
+  background: #efe6db !important;
+  border: 1px solid var(--line) !important;
+}
+
+.sp-plan-tabs button.active {
+  background: var(--ink) !important;
+  color: #fff !important;
+}
+
+.mg-template-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,240,223,0.72)) !important;
+  border-color: rgba(182, 111, 60, 0.16) !important;
+}
+
+.mg-template-count {
+  background: linear-gradient(145deg, #122b3d, #243f53) !important;
+  color: #fff !important;
+  box-shadow: 0 14px 28px rgba(18, 43, 61, 0.22) !important;
+}
+
+.mg-handoff-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.88), rgba(255,248,238,0.76)) !important;
+}
+
+.mg-weekly-card {
+  background: linear-gradient(145deg, #102638, #203d52 88%) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+
+.mg-weekly-card h2,
+.mg-weekly-card strong {
+  color: #fff !important;
+}
+
+.mg-weekly-card .mg-card-head span {
+  color: #f0c885 !important;
+}
+
+.mg-weekly-card .mg-card-head p,
+.mg-metrics span {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+.mg-weekly-card .mg-card-head > button {
+  background: linear-gradient(145deg, #e7b957, #dfa45f) !important;
+  color: var(--ink) !important;
+}
+
+.sp-report textarea,
+.sp-field input,
+.sp-extra input,
+.sp-clock-settings input,
+.sp-interrupt-modal input,
+.field-label input,
+.extra-row input,
+.report-card textarea,
+.sp-hours-card input {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--ink) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+}
+
+.sp-report textarea:focus,
+.sp-field input:focus,
+.sp-extra input:focus,
+.sp-clock-settings input:focus,
+.sp-interrupt-modal input:focus,
+.field-label input:focus,
+.extra-row input:focus,
+.report-card textarea:focus {
+  border-color: #dfa45f !important;
+  box-shadow: 0 0 0 4px rgba(223, 164, 95, 0.14) !important;
+}
+
+.sp-report pre,
+.report-preview,
+.report-card pre {
+  background: #f6f1ea !important;
+  border: 1px solid var(--line) !important;
+  color: #45515b !important;
+}
+
+.sp-report.gold,
+.gold-card {
+  background: linear-gradient(145deg, #fff, #fff4d3) !important;
+}
+
+.gold-btn,
+.primary-action.gold-action {
+  background: linear-gradient(145deg, #e7b957, #dfa45f) !important;
+  color: var(--ink) !important;
+}
+
+.sp-toast,
+.toast {
+  background: rgba(18, 43, 61, 0.94) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 20px 42px rgba(18, 43, 61, 0.3) !important;
+}
+
+.sp-listening,
+.listening-orb {
+  background: rgba(18, 43, 61, 0.95) !important;
+  box-shadow: 0 26px 76px rgba(18, 43, 61, 0.38) !important;
+}
+
+.sp-focus {
+  background: radial-gradient(circle at 50% 0%, rgba(223, 164, 95, 0.22), transparent 34%),
+    linear-gradient(160deg, #102638, #061b28 58%, #243f53) !important;
+  color: #fff !important;
+}
+
+.sp-focus h1,
+.sp-focus strong {
+  color: #fff !important;
+}
+
+.sp-focus-progress {
+  background: rgba(255, 255, 255, 0.13) !important;
+}
+
+.sp-focus-progress i {
+  background: linear-gradient(90deg, #dfa45f, #e7b957) !important;
+}
+
+.sp-focus-actions button {
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  background: rgba(255, 255, 255, 0.11) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.sp-focus-actions button.complete {
+  background: linear-gradient(145deg, #b66f3c, #dfa45f) !important;
+}
+
+.empty-state,
+.sp-empty-list,
+.sp-empty-now {
+  background: rgba(255, 255, 255, 0.62) !important;
+  border: 1px dashed rgba(18, 43, 61, 0.16) !important;
+}
+
+@media (min-width: 720px) {
+  .sp-page,
+  .page {
+    padding-top: 20px !important;
+  }
+}
