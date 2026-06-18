@@ -1,4 +1,4 @@
-const CACHE='shiftpilot-v3';
+const CACHE='shiftpilot-v4';
 const APP_SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];
 
 self.addEventListener('install',event=>{
@@ -28,13 +28,12 @@ self.addEventListener('fetch',event=>{
   }
 
   event.respondWith(
-    caches.match(event.request).then(cached=>{
-      const network=fetch(event.request).then(response=>{
+    fetch(event.request)
+      .then(response=>{
         const copy=response.clone();
         caches.open(CACHE).then(cache=>cache.put(event.request,copy));
         return response;
-      });
-      return cached||network;
-    })
+      })
+      .catch(()=>caches.match(event.request))
   );
 });
