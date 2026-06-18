@@ -48,7 +48,15 @@
 }
 
 .sp-app {
-  padding-bottom: 118px !important;
+  padding-bottom: 156px !important;
+}
+
+.sp-main {
+  padding-bottom: 142px !important;
+}
+
+.sp-page {
+  padding-bottom: 154px !important;
 }
 
 .sp-status-grid article {
@@ -67,6 +75,117 @@
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
+}
+
+.sp-hero-copy {
+  margin: 7px 0 0 !important;
+  max-width: 27rem !important;
+  color: rgba(255, 255, 255, 0.76) !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+}
+
+.sp-hero.shift-ended {
+  background:
+    radial-gradient(circle at 87% 8%, rgba(191, 79, 91, 0.22), transparent 30%),
+    linear-gradient(145deg, #102538 0%, #253444 57%, #536a50 100%) !important;
+}
+
+.sp-hero.shift-wrap {
+  background:
+    radial-gradient(circle at 88% 8%, rgba(228, 184, 90, 0.22), transparent 30%),
+    linear-gradient(145deg, #102538 0%, #1d3a4f 57%, #536a50 100%) !important;
+}
+
+.sp-hero.shift-before {
+  background:
+    radial-gradient(circle at 88% 8%, rgba(169, 186, 156, 0.28), transparent 30%),
+    linear-gradient(145deg, #102538 0%, #263f53 57%, #74896d 100%) !important;
+}
+
+.sp-hero-status .ended {
+  background: rgba(191, 79, 91, 0.16) !important;
+  border-color: rgba(191, 79, 91, 0.34) !important;
+}
+
+.sp-hero-status .ended strong {
+  color: #ffd5db !important;
+}
+
+.sp-now-card-ended {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 240, 242, 0.82)) !important;
+}
+
+.sp-now-card-wrap {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 244, 214, 0.78)) !important;
+}
+
+.sp-now-card-staging {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(238, 244, 233, 0.9)) !important;
+}
+
+.sp-now-actions {
+  position: relative !important;
+  z-index: 1 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1.1fr !important;
+  gap: 9px !important;
+  margin-top: 15px !important;
+}
+
+.sp-now-actions .sp-focus-start {
+  margin-top: 0 !important;
+}
+
+.sp-secondary-action,
+.sp-subtle-reset {
+  min-height: 54px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(16, 37, 56, 0.1) !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  color: #536a50 !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 10px 22px rgba(16, 37, 56, 0.08) !important;
+}
+
+.sp-subtle-reset {
+  position: relative !important;
+  z-index: 1 !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  margin-top: 9px !important;
+  color: #9f3946 !important;
+  background: rgba(255, 240, 242, 0.78) !important;
+}
+
+.sp-empty-now .sp-focus-start {
+  max-width: 240px !important;
+  margin: 16px auto 0 !important;
+}
+
+.sp-compact-task.ended {
+  grid-template-columns: 30px 1fr 8px 0 38px !important;
+}
+
+.sp-compact-task.ended button:empty {
+  display: none !important;
+}
+
+.sp-plan-banner.ended {
+  background: var(--redSoft) !important;
+  color: #9f3946 !important;
+}
+
+@media (max-width: 420px) {
+  .sp-now-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .sp-page {
+    padding-bottom: 164px !important;
+  }
 }
 
 @media (max-width: 380px) {
