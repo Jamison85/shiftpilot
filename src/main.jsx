@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import AppV2 from './AppV2.jsx';
 import './appV2.css';
 import './managementV3.css';
-import './finishPolish.css';
 import './premium-theme.css';
+import './finishPolish.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode><AppV2 /></React.StrictMode>
