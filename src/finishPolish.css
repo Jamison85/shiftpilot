@@ -166,11 +166,7 @@
 }
 
 .sp-compact-task.ended {
-  grid-template-columns: 30px 1fr 8px 0 38px !important;
-}
-
-.sp-compact-task.ended button:empty {
-  display: none !important;
+  grid-template-columns: 30px 1fr 8px 38px !important;
 }
 
 .sp-plan-banner.ended {
