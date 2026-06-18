@@ -1,141 +1,195 @@
+/*
+  ShiftPilot final visual pass
+  Mobile-first, sage/slate palette, readable type, and one coherent polish layer.
+  Base structure stays in appV2.css and managementV3.css; this file is the intentional final override.
+*/
+
 :root {
-  --cream: #f8f1e7;
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  --cream: #f6f1e8;
   --cream2: #fffaf2;
-  --bg: #f8f1e7;
-  --paper: rgba(255, 255, 255, 0.86);
-  --surface: rgba(255, 255, 255, 0.82);
+  --bg: #f6f1e8;
+  --paper: rgba(255, 255, 255, 0.9);
+  --surface: rgba(255, 255, 255, 0.84);
   --surface-strong: #ffffff;
-  --ink: #122b3d;
-  --ink2: #1b3a50;
-  --navy: #122b3d;
-  --muted: #6f7a84;
-  --muted2: #6f7a84;
-  --line: rgba(18, 43, 61, 0.12);
-  --teal: #b66f3c;
-  --teal2: #dfa45f;
-  --tealSoft: #fff0df;
+  --ink: #102538;
+  --ink2: #1c3548;
+  --navy: #102538;
+  --muted: #61707c;
+  --muted2: #78848d;
+  --line: rgba(16, 37, 56, 0.13);
+
+  --sage: #74896d;
+  --sage2: #8fa481;
+  --sage3: #a9ba9c;
+  --moss: #536a50;
+  --sageSoft: #eef4e9;
+  --teal: #74896d;
+  --teal2: #8fa481;
+  --tealSoft: #eef4e9;
   --green: #74896d;
-  --success: #74896d;
-  --successSoft: #eef4e9;
-  --gold: #e7b957;
-  --goldSoft: #fff4d3;
+  --success: #5f7e59;
+  --successSoft: #edf6e9;
+
+  --gold: #e4b85a;
+  --goldSoft: #fff4d6;
   --coral: #d77a4a;
-  --red: #c6535a;
-  --redSoft: #fff0f1;
-  --shadow: 0 20px 50px rgba(18, 43, 61, 0.12);
-  --shadow2: 0 34px 80px rgba(18, 43, 61, 0.2);
+  --red: #bf4f5b;
+  --redSoft: #fff0f2;
+
+  --shadow: 0 18px 46px rgba(16, 37, 56, 0.12);
+  --shadow2: 0 32px 74px rgba(16, 37, 56, 0.2);
+  --inner: inset 0 1px 0 rgba(255, 255, 255, 0.7);
   --radius-xl: 30px;
   --radius-lg: 23px;
   --radius-md: 17px;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 html {
-  background: radial-gradient(circle at 18% -8%, rgba(223, 164, 95, 0.2), transparent 34%),
-    radial-gradient(circle at 90% 0%, rgba(18, 43, 61, 0.1), transparent 30%),
-    linear-gradient(180deg, #fffaf2 0%, #f8f1e7 42%, #efe4d6 100%) !important;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 18% -8%, rgba(143, 164, 129, 0.34), transparent 34%),
+    radial-gradient(circle at 92% 0%, rgba(16, 37, 56, 0.12), transparent 31%),
+    linear-gradient(180deg, #fffaf2 0%, #f6f1e8 48%, #ece3d8 100%) !important;
 }
 
 body {
+  min-height: 100%;
   background: transparent !important;
   color: var(--ink) !important;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 [role="button"]:focus-visible {
-  outline: 3px solid rgba(223, 164, 95, 0.38) !important;
+  outline: 3px solid rgba(116, 137, 109, 0.34) !important;
   outline-offset: 2px;
 }
 
 .sp-app,
 .app-shell {
-  background: radial-gradient(circle at 90% -12%, rgba(231, 185, 87, 0.25), transparent 34%),
-    radial-gradient(circle at -10% 12%, rgba(18, 43, 61, 0.1), transparent 30%),
-    linear-gradient(180deg, #fffaf2 0%, #f8f1e7 46%, #efe4d6 100%) !important;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 88% -11%, rgba(169, 186, 156, 0.36), transparent 34%),
+    radial-gradient(circle at -12% 14%, rgba(16, 37, 56, 0.11), transparent 32%),
+    linear-gradient(180deg, #fffaf2 0%, #f6f1e8 48%, #ece3d8 100%) !important;
 }
 
 .sp-app::before,
 .ambient-one {
-  background: radial-gradient(circle, rgba(223, 164, 95, 0.22), transparent 68%) !important;
+  background: radial-gradient(circle, rgba(143, 164, 129, 0.28), transparent 68%) !important;
 }
 
 .sp-app::after,
 .ambient-two {
-  background: radial-gradient(circle, rgba(18, 43, 61, 0.1), transparent 70%) !important;
+  background: radial-gradient(circle, rgba(16, 37, 56, 0.12), transparent 70%) !important;
 }
 
-.sp-topbar,
-.topbar {
-  background: linear-gradient(180deg, rgba(255, 250, 242, 0.94), rgba(255, 250, 242, 0.68)) !important;
-  border-bottom: 1px solid rgba(18, 43, 61, 0.07) !important;
-  box-shadow: 0 10px 28px rgba(18, 43, 61, 0.06) !important;
-}
-
-.sp-logo,
-.brand-mark {
-  background: linear-gradient(145deg, #122b3d 0%, #1f4058 58%, #dfa45f 100%) !important;
-  color: #fff !important;
-  box-shadow: 0 16px 36px rgba(18, 43, 61, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.36) !important;
-}
-
-.sp-brand strong,
-.brand-copy strong,
-.sp-page-head h1,
-.sp-section-title h2,
-.section-heading h2,
-.page-title h1,
-.sp-now-card h2,
-.sp-task-row strong,
-.sp-compact-task strong,
-.mg-card-head h2,
-.sp-report h2,
-.sp-sheet-head h2 {
-  color: var(--ink) !important;
-  letter-spacing: -0.055em !important;
-}
-
-.sp-brand span,
-.brand-copy span,
-.sp-now-details > span,
-.sp-status-grid small,
-.sp-task-row small,
-.sp-compact-task small,
-.sp-report p,
-.mg-card-head p,
-.sp-sheet-head p,
-.sp-empty-list,
-.sp-empty-now p {
-  color: var(--muted) !important;
+.sp-main {
+  isolation: isolate;
 }
 
 .sp-page,
 .page {
-  padding-top: 14px !important;
+  width: min(100%, 760px) !important;
+  padding: 16px 15px 30px !important;
+}
+
+.sp-topbar,
+.topbar {
+  background: linear-gradient(180deg, rgba(255, 250, 242, 0.94), rgba(255, 250, 242, 0.72)) !important;
+  border-bottom: 1px solid rgba(16, 37, 56, 0.08) !important;
+  box-shadow: 0 10px 28px rgba(16, 37, 56, 0.06) !important;
+  backdrop-filter: blur(20px) saturate(1.2) !important;
+}
+
+.sp-logo,
+.brand-mark {
+  background: linear-gradient(145deg, #102538 0%, #1d3a4f 56%, #74896d 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 16px 34px rgba(16, 37, 56, 0.24), var(--inner) !important;
+}
+
+.sp-brand strong,
+.brand-copy strong {
+  color: var(--ink) !important;
+  font-size: 18px !important;
+  letter-spacing: -0.03em !important;
+}
+
+.sp-brand span,
+.brand-copy span {
+  color: var(--muted) !important;
+  font-size: 12px !important;
+}
+
+.sp-icon-btn {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(16, 37, 56, 0.08) !important;
+  box-shadow: 0 10px 22px rgba(16, 37, 56, 0.09) !important;
 }
 
 .sp-hero,
 .hero-card {
-  border: 1px solid rgba(255, 255, 255, 0.52) !important;
-  background: linear-gradient(145deg, #102638 0%, #132f43 44%, #243f53 100%) !important;
-  box-shadow: 0 34px 80px rgba(18, 43, 61, 0.28) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 255, 255, 0.46) !important;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(169, 186, 156, 0.34), transparent 28%),
+    linear-gradient(145deg, #0f2335 0%, #18394e 54%, #536a50 100%) !important;
   color: #fff !important;
-}
-
-.sp-hero::before {
-  background: rgba(223, 164, 95, 0.24) !important;
+  box-shadow: 0 32px 78px rgba(16, 37, 56, 0.28) !important;
 }
 
 .sp-hero::after,
 .hero-card::after {
-  background: rgba(223, 164, 95, 0.16) !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(169, 186, 156, 0.16) !important;
+}
+
+.sp-hero h1,
+.hero-card h1,
+.sp-page-head h1,
+.page-title h1 {
+  letter-spacing: -0.075em !important;
 }
 
 .sp-hero h1,
 .hero-card h1 {
   color: #fff !important;
-  letter-spacing: -0.075em !important;
+}
+
+.sp-page-head h1,
+.page-title h1,
+.sp-section-title h2,
+.section-heading h2,
+.sp-now-card h2,
+.sp-task-row strong,
+.sp-compact-task strong,
+.mg-card-head h2,
+.sp-report h2,
+.sp-sheet-head h2,
+.sp-learning-card h2 {
+  color: var(--ink) !important;
 }
 
 .sp-kicker,
@@ -152,25 +206,25 @@ textarea:focus-visible,
 .sp-hours-card span,
 .mg-template-card span,
 .mg-card-head span {
-  color: #b66f3c !important;
+  color: var(--moss) !important;
 }
 
 .sp-hero .sp-kicker,
 .sp-hero-status span,
 .hero-card .eyebrow {
-  color: rgba(255, 255, 255, 0.68) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .sp-truck,
 .truck-toggle {
   background: rgba(255, 255, 255, 0.11) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.17) !important;
+  box-shadow: var(--inner) !important;
 }
 
 .sp-truck input:checked + span,
 .truck-toggle input:checked + .toggle-track {
-  background: #dfa45f !important;
+  background: var(--sage3) !important;
 }
 
 .sp-shift-tabs {
@@ -179,7 +233,8 @@ textarea:focus-visible,
 }
 
 .sp-shift-tabs button {
-  color: rgba(255, 255, 255, 0.74) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  min-height: 40px !important;
 }
 
 .sp-shift-tabs button.active {
@@ -191,7 +246,7 @@ textarea:focus-visible,
 .sp-shift-tabs.light {
   background: rgba(255, 255, 255, 0.72) !important;
   border: 1px solid var(--line) !important;
-  box-shadow: 0 12px 24px rgba(18, 43, 61, 0.06) !important;
+  box-shadow: 0 12px 24px rgba(16, 37, 56, 0.06) !important;
 }
 
 .sp-shift-tabs.light button {
@@ -203,39 +258,64 @@ textarea:focus-visible,
   color: #fff !important;
 }
 
+.sp-hero-status {
+  gap: 9px !important;
+}
+
 .sp-hero-status > div {
+  min-height: 66px !important;
   background: rgba(255, 255, 255, 0.1) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   backdrop-filter: blur(10px) !important;
 }
 
+.sp-hero-status span {
+  font-size: 9px !important;
+}
+
+.sp-hero-status strong {
+  font-size: 15px !important;
+}
+
 .sp-hero-status .ahead {
-  background: rgba(116, 137, 109, 0.2) !important;
-  border-color: rgba(116, 137, 109, 0.3) !important;
+  background: rgba(116, 137, 109, 0.22) !important;
+  border-color: rgba(169, 186, 156, 0.32) !important;
 }
 
 .sp-hero-status .ahead strong {
-  color: #e4f0de !important;
+  color: #e8f3e2 !important;
 }
 
 .sp-hero-status .behind {
-  background: rgba(214, 122, 74, 0.2) !important;
-  border-color: rgba(214, 122, 74, 0.34) !important;
+  background: rgba(191, 79, 91, 0.18) !important;
+  border-color: rgba(191, 79, 91, 0.34) !important;
 }
 
 .sp-voice,
 .voice-hero {
-  border: 1px solid rgba(255, 255, 255, 0.68) !important;
-  background: linear-gradient(145deg, #b66f3c, #dfa45f) !important;
-  box-shadow: 0 22px 44px rgba(182, 111, 60, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.62) !important;
+  background: linear-gradient(145deg, var(--moss), var(--sage2)) !important;
+  box-shadow: 0 22px 44px rgba(83, 106, 80, 0.24), var(--inner) !important;
   color: #fff !important;
+}
+
+.sp-voice::after {
+  opacity: 0.45 !important;
 }
 
 .sp-voice > span,
 .voice-icon,
 .listening-orb span {
-  color: #b66f3c !important;
+  color: var(--moss) !important;
   background: #fff !important;
+}
+
+.sp-voice strong {
+  font-size: 17px !important;
+}
+
+.sp-voice small {
+  font-size: 11px !important;
 }
 
 .sp-now-card,
@@ -243,19 +323,36 @@ textarea:focus-visible,
   position: relative !important;
   overflow: hidden !important;
   border: 1px solid rgba(255, 255, 255, 0.76) !important;
-  background: linear-gradient(145deg, rgba(255,255,255,0.94), rgba(255,247,235,0.82)) !important;
-  box-shadow: 0 24px 58px rgba(18, 43, 61, 0.13) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(242, 248, 236, 0.86)) !important;
+  box-shadow: 0 24px 58px rgba(16, 37, 56, 0.13) !important;
   backdrop-filter: blur(16px) !important;
 }
 
-.sp-now-card::before {
-  background: linear-gradient(90deg, #b66f3c, #dfa45f, #e7b957) !important;
+.sp-now-card::before,
+.next-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7px;
+  background: linear-gradient(180deg, var(--sage2), var(--moss));
+  opacity: 0.98;
+}
+
+.sp-now-head,
+.sp-now-card h2,
+.sp-now-details,
+.sp-learned,
+.sp-focus-start {
+  position: relative;
+  z-index: 1;
 }
 
 .sp-now-head b {
-  background: #fff0df !important;
-  color: #8e512d !important;
-  border: 1px solid rgba(182, 111, 60, 0.12) !important;
+  padding: 6px 8px !important;
+  border-radius: 999px !important;
+  background: var(--sageSoft) !important;
+  color: var(--moss) !important;
+  border: 1px solid rgba(116, 137, 109, 0.16) !important;
 }
 
 .sp-now-details > span,
@@ -270,16 +367,21 @@ textarea:focus-visible,
 .primary-action,
 .complete-now,
 .sp-report button:not(.sp-sheet-close),
-.mg-card-head > button {
-  background: linear-gradient(145deg, #b66f3c, #dfa45f) !important;
+.mg-card-head > button,
+.sp-sheet-actions .primary {
+  background: linear-gradient(145deg, var(--moss), var(--sage2)) !important;
   color: #fff !important;
-  box-shadow: 0 18px 36px rgba(182, 111, 60, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 18px 36px rgba(83, 106, 80, 0.24), var(--inner) !important;
 }
 
 .sp-focus-start,
 .sp-wide-primary {
   min-height: 54px !important;
   border-radius: 18px !important;
+}
+
+.sp-status-grid {
+  gap: 9px !important;
 }
 
 .sp-status-grid article,
@@ -295,9 +397,9 @@ textarea:focus-visible,
 .mg-template-card,
 .mg-handoff-card,
 .mg-problem-card {
-  border: 1px solid rgba(255, 255, 255, 0.72) !important;
-  background: rgba(255, 255, 255, 0.78) !important;
-  box-shadow: 0 18px 42px rgba(18, 43, 61, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.74) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  box-shadow: 0 18px 42px rgba(16, 37, 56, 0.1) !important;
   backdrop-filter: blur(14px) !important;
 }
 
@@ -309,37 +411,58 @@ textarea:focus-visible,
 .sp-status-grid span,
 .metric-card > span {
   color: var(--muted) !important;
+  font-size: 9px !important;
 }
 
 .sp-status-grid strong,
 .metric-card strong {
   color: var(--ink) !important;
+  font-size: 22px !important;
+}
+
+.sp-status-grid small,
+.sp-task-row small,
+.sp-compact-task small,
+.sp-report p,
+.mg-card-head p,
+.sp-sheet-head p,
+.sp-empty-list,
+.sp-empty-now p {
+  color: var(--muted) !important;
 }
 
 .sp-progress,
 .mini-progress,
 .capacity-line {
-  background: #eadfd2 !important;
+  background: #dfe7dc !important;
 }
 
 .sp-progress i,
 .mini-progress span,
 .capacity-line span {
-  background: linear-gradient(90deg, #b66f3c, #dfa45f) !important;
-  box-shadow: 0 0 18px rgba(182, 111, 60, 0.28) !important;
+  background: linear-gradient(90deg, var(--moss), var(--sage2)) !important;
+  box-shadow: 0 0 18px rgba(116, 137, 109, 0.32) !important;
 }
 
 .sp-plan-button {
   grid-template-columns: 46px 1fr auto !important;
-  min-height: 76px !important;
+  min-height: 78px !important;
   border-radius: 26px !important;
 }
 
 .sp-plan-button > svg:first-child,
 .next-icon {
-  background: linear-gradient(145deg, #122b3d, #243f53) !important;
+  background: linear-gradient(145deg, #102538, #1d3a4f) !important;
   color: #fff !important;
-  box-shadow: 0 14px 28px rgba(18, 43, 61, 0.22) !important;
+  box-shadow: 0 14px 28px rgba(16, 37, 56, 0.22) !important;
+}
+
+.sp-plan-button strong {
+  font-size: 16px !important;
+}
+
+.sp-plan-button small {
+  font-size: 10px !important;
 }
 
 .sp-plan-button > svg:last-child,
@@ -348,7 +471,7 @@ textarea:focus-visible,
 .sp-section-title button,
 .sp-row-action,
 .completed-chips button {
-  color: #b66f3c !important;
+  color: var(--moss) !important;
 }
 
 .sp-section-title button,
@@ -356,37 +479,69 @@ textarea:focus-visible,
 .pill.required,
 .sp-priority.required,
 .completed-chips > span {
-  background: #fff0df !important;
-  color: #9b5b32 !important;
-  border: 1px solid rgba(182, 111, 60, 0.12) !important;
+  background: var(--sageSoft) !important;
+  color: var(--moss) !important;
+  border: 1px solid rgba(116, 137, 109, 0.15) !important;
+}
+
+.sp-priority {
+  padding: 6px 8px !important;
+  font-size: 9px !important;
 }
 
 .sp-priority.urgent,
 .pill.urgent {
-  background: #fff0f1 !important;
-  color: #a33c43 !important;
+  background: var(--redSoft) !important;
+  color: #9f3946 !important;
 }
 
 .sp-priority.high {
   background: var(--goldSoft) !important;
-  color: #8a6413 !important;
+  color: #826111 !important;
 }
 
 .sp-priority.normal,
 .sp-priority.low {
-  background: #eff2f2 !important;
+  background: #eff3f1 !important;
   color: var(--muted) !important;
 }
 
-.sp-compact-task,
 .sp-task-row,
+.sp-compact-task,
 .task-card {
   border-radius: 21px !important;
-  transition: transform 0.16s ease, box-shadow 0.16s ease, border 0.16s ease !important;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease !important;
 }
 
-.sp-compact-task:active,
+.sp-task-row {
+  grid-template-columns: 36px 1fr auto auto !important;
+  min-height: 78px !important;
+}
+
+.sp-task-row strong,
+.sp-compact-task strong {
+  font-size: 13px !important;
+}
+
+.sp-task-row small,
+.sp-compact-task small {
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+}
+
+.sp-compact-task {
+  min-height: 72px !important;
+  grid-template-columns: 30px 1fr 8px 38px 38px !important;
+}
+
+.sp-compact-task button {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 13px !important;
+}
+
 .sp-task-row:active,
+.sp-compact-task:active,
 .task-card:active {
   transform: scale(0.99) !important;
 }
@@ -394,13 +549,13 @@ textarea:focus-visible,
 .sp-seq {
   background: var(--ink) !important;
   color: #fff !important;
-  box-shadow: 0 10px 22px rgba(18, 43, 61, 0.18) !important;
+  box-shadow: 0 10px 22px rgba(16, 37, 56, 0.18) !important;
 }
 
 .sp-dot.required,
 .sp-dot.normal,
 .sp-dot.low {
-  background: #b66f3c !important;
+  background: var(--sage) !important;
 }
 
 .sp-dot.urgent {
@@ -411,23 +566,23 @@ textarea:focus-visible,
 .task-card.is-complete,
 .walk-row.checked,
 .mg-suggestion-list article.included {
-  background: rgba(238, 244, 233, 0.82) !important;
-  border-color: rgba(116, 137, 109, 0.22) !important;
+  background: rgba(237, 246, 233, 0.86) !important;
+  border-color: rgba(116, 137, 109, 0.24) !important;
 }
 
 .sp-task-row.done .sp-check,
 .task-card.is-complete .task-check,
 .walk-row.checked .walk-check {
-  background: #74896d !important;
-  border-color: #74896d !important;
+  background: var(--success) !important;
+  border-color: var(--success) !important;
 }
 
 .sp-check,
 .task-check,
 .walk-check {
   background: #fff !important;
-  border-color: rgba(18, 43, 61, 0.16) !important;
-  box-shadow: 0 8px 18px rgba(18, 43, 61, 0.08) !important;
+  border-color: rgba(16, 37, 56, 0.16) !important;
+  box-shadow: 0 8px 18px rgba(16, 37, 56, 0.08) !important;
 }
 
 .status-good,
@@ -435,15 +590,16 @@ textarea:focus-visible,
 .walk-row.checked,
 .walk-row.child.checked,
 .empty-state > div {
-  color: #74896d !important;
+  color: var(--success) !important;
 }
 
 .sp-nav,
 .bottom-nav {
-  border: 1px solid rgba(255, 255, 255, 0.78) !important;
-  background: rgba(255, 255, 255, 0.86) !important;
-  box-shadow: 0 24px 60px rgba(18, 43, 61, 0.18) !important;
-  backdrop-filter: blur(20px) !important;
+  height: 78px !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  box-shadow: 0 24px 60px rgba(16, 37, 56, 0.18) !important;
+  backdrop-filter: blur(20px) saturate(1.16) !important;
 }
 
 .sp-nav button,
@@ -451,34 +607,39 @@ textarea:focus-visible,
   color: var(--muted) !important;
 }
 
+.sp-nav button span,
+.bottom-nav > button span {
+  font-size: 9px !important;
+}
+
 .sp-nav button.active,
 .bottom-nav > button.active {
-  color: #b66f3c !important;
+  color: var(--moss) !important;
 }
 
 .sp-nav-mic span,
 .nav-mic span {
-  background: linear-gradient(145deg, #122b3d, #243f53) !important;
+  background: linear-gradient(145deg, #102538, #1d3a4f) !important;
   color: #fff !important;
-  box-shadow: 0 16px 34px rgba(18, 43, 61, 0.28), 0 0 0 7px var(--cream) !important;
+  box-shadow: 0 16px 34px rgba(16, 37, 56, 0.28), 0 0 0 7px var(--cream) !important;
 }
 
 .sp-sheet-bg,
 .sheet-backdrop {
-  background: rgba(18, 43, 61, 0.38) !important;
+  background: rgba(16, 37, 56, 0.38) !important;
   backdrop-filter: blur(13px) !important;
 }
 
 .sp-sheet,
 .bottom-sheet {
-  background: linear-gradient(180deg, #fffaf4, #f8f1e7) !important;
+  background: linear-gradient(180deg, #fffaf4, #f6f1e8) !important;
   border: 1px solid rgba(255, 255, 255, 0.76) !important;
-  box-shadow: 0 -30px 76px rgba(18, 43, 61, 0.28) !important;
+  box-shadow: 0 -30px 76px rgba(16, 37, 56, 0.28) !important;
 }
 
 .sp-grabber,
 .sheet-grabber {
-  background: #d8cdbf !important;
+  background: #d7d0c4 !important;
 }
 
 .sp-sheet-close,
@@ -489,7 +650,7 @@ textarea:focus-visible,
 
 .sp-plan-tabs,
 .shift-tabs.light {
-  background: #efe6db !important;
+  background: #e9e4dc !important;
   border: 1px solid var(--line) !important;
 }
 
@@ -498,43 +659,68 @@ textarea:focus-visible,
   color: #fff !important;
 }
 
+.sp-plan-banner.ahead {
+  background: var(--sageSoft) !important;
+  color: var(--moss) !important;
+}
+
+.sp-plan-banner.behind {
+  background: var(--redSoft) !important;
+  color: var(--red) !important;
+}
+
+.sp-plan-list article,
+.sp-priority-list article,
+.sp-interrupt-list article,
+.sp-settings-row,
+.sp-walk section,
+.mg-suggestion-list article,
+.mg-problem-list article {
+  background: rgba(255, 255, 255, 0.86) !important;
+  border-color: var(--line) !important;
+}
+
 .mg-template-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,240,223,0.72)) !important;
-  border-color: rgba(182, 111, 60, 0.16) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(238, 244, 233, 0.76)) !important;
+  border-color: rgba(116, 137, 109, 0.17) !important;
 }
 
 .mg-template-count {
-  background: linear-gradient(145deg, #122b3d, #243f53) !important;
+  background: linear-gradient(145deg, #102538, #1d3a4f) !important;
   color: #fff !important;
-  box-shadow: 0 14px 28px rgba(18, 43, 61, 0.22) !important;
+  box-shadow: 0 14px 28px rgba(16, 37, 56, 0.22) !important;
 }
 
 .mg-handoff-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.88), rgba(255,248,238,0.76)) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(238, 244, 233, 0.7)) !important;
 }
 
-.mg-weekly-card {
-  background: linear-gradient(145deg, #102638, #203d52 88%) !important;
+.mg-weekly-card,
+.sp-learning-card {
+  background: linear-gradient(145deg, #102538, #1d3a4f 88%) !important;
   color: #fff !important;
   border-color: transparent !important;
 }
 
 .mg-weekly-card h2,
-.mg-weekly-card strong {
+.mg-weekly-card strong,
+.sp-learning-card h2,
+.sp-learning-card strong {
   color: #fff !important;
 }
 
 .mg-weekly-card .mg-card-head span {
-  color: #f0c885 !important;
+  color: #dfe8d8 !important;
 }
 
 .mg-weekly-card .mg-card-head p,
-.mg-metrics span {
+.mg-metrics span,
+.sp-learning-card span {
   color: rgba(255, 255, 255, 0.68) !important;
 }
 
 .mg-weekly-card .mg-card-head > button {
-  background: linear-gradient(145deg, #e7b957, #dfa45f) !important;
+  background: linear-gradient(145deg, var(--gold), var(--sage3)) !important;
   color: var(--ink) !important;
 }
 
@@ -547,10 +733,10 @@ textarea:focus-visible,
 .extra-row input,
 .report-card textarea,
 .sp-hours-card input {
-  background: rgba(255, 255, 255, 0.88) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
   border: 1px solid var(--line) !important;
   color: var(--ink) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+  box-shadow: var(--inner) !important;
 }
 
 .sp-report textarea:focus,
@@ -560,46 +746,48 @@ textarea:focus-visible,
 .sp-interrupt-modal input:focus,
 .field-label input:focus,
 .extra-row input:focus,
-.report-card textarea:focus {
-  border-color: #dfa45f !important;
-  box-shadow: 0 0 0 4px rgba(223, 164, 95, 0.14) !important;
+.report-card textarea:focus,
+.sp-hours-card input:focus {
+  border-color: var(--sage) !important;
+  box-shadow: 0 0 0 4px rgba(116, 137, 109, 0.14) !important;
 }
 
 .sp-report pre,
 .report-preview,
 .report-card pre {
-  background: #f6f1ea !important;
+  background: #f4f1ea !important;
   border: 1px solid var(--line) !important;
   color: #45515b !important;
 }
 
 .sp-report.gold,
 .gold-card {
-  background: linear-gradient(145deg, #fff, #fff4d3) !important;
+  background: linear-gradient(145deg, #fff, #fff4d6) !important;
 }
 
 .gold-btn,
 .primary-action.gold-action {
-  background: linear-gradient(145deg, #e7b957, #dfa45f) !important;
+  background: linear-gradient(145deg, var(--gold), #ead08a) !important;
   color: var(--ink) !important;
 }
 
 .sp-toast,
 .toast {
-  background: rgba(18, 43, 61, 0.94) !important;
+  background: rgba(16, 37, 56, 0.94) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 20px 42px rgba(18, 43, 61, 0.3) !important;
+  box-shadow: 0 20px 42px rgba(16, 37, 56, 0.3) !important;
 }
 
 .sp-listening,
 .listening-orb {
-  background: rgba(18, 43, 61, 0.95) !important;
-  box-shadow: 0 26px 76px rgba(18, 43, 61, 0.38) !important;
+  background: rgba(16, 37, 56, 0.95) !important;
+  box-shadow: 0 26px 76px rgba(16, 37, 56, 0.38) !important;
 }
 
 .sp-focus {
-  background: radial-gradient(circle at 50% 0%, rgba(223, 164, 95, 0.22), transparent 34%),
-    linear-gradient(160deg, #102638, #061b28 58%, #243f53) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(143, 164, 129, 0.25), transparent 34%),
+    linear-gradient(160deg, #102538, #061b28 58%, #536a50) !important;
   color: #fff !important;
 }
 
@@ -608,12 +796,16 @@ textarea:focus-visible,
   color: #fff !important;
 }
 
+.sp-focus-label {
+  color: #cfe0c8 !important;
+}
+
 .sp-focus-progress {
   background: rgba(255, 255, 255, 0.13) !important;
 }
 
 .sp-focus-progress i {
-  background: linear-gradient(90deg, #dfa45f, #e7b957) !important;
+  background: linear-gradient(90deg, var(--sage3), var(--gold)) !important;
 }
 
 .sp-focus-actions button {
@@ -623,19 +815,137 @@ textarea:focus-visible,
 }
 
 .sp-focus-actions button.complete {
-  background: linear-gradient(145deg, #b66f3c, #dfa45f) !important;
+  background: linear-gradient(145deg, var(--moss), var(--sage2)) !important;
 }
 
 .empty-state,
 .sp-empty-list,
 .sp-empty-now {
-  background: rgba(255, 255, 255, 0.62) !important;
-  border: 1px dashed rgba(18, 43, 61, 0.16) !important;
+  background: rgba(255, 255, 255, 0.64) !important;
+  border: 1px dashed rgba(16, 37, 56, 0.16) !important;
+}
+
+.sp-confetti > div {
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+}
+
+@media (hover: hover) {
+  .sp-icon-btn:hover,
+  .sp-plan-button:hover,
+  .sp-task-row:hover,
+  .sp-compact-task:hover,
+  .sp-report > button:hover,
+  .sp-small-primary:hover,
+  .sp-focus-start:hover,
+  .sp-wide-primary:hover {
+    transform: translateY(-1px);
+  }
+
+  .sp-plan-button:hover,
+  .sp-task-row:hover,
+  .sp-compact-task:hover {
+    box-shadow: 0 22px 50px rgba(16, 37, 56, 0.14) !important;
+  }
 }
 
 @media (min-width: 720px) {
   .sp-page,
   .page {
-    padding-top: 20px !important;
+    padding-top: 22px !important;
+  }
+
+  .sp-hero,
+  .sp-now-card,
+  .sp-plan-button,
+  .sp-report,
+  .mg-template-card,
+  .mg-handoff-card,
+  .mg-weekly-card,
+  .mg-problem-card {
+    border-radius: 32px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .sp-page,
+  .page {
+    padding-left: 13px !important;
+    padding-right: 13px !important;
+  }
+
+  .sp-hero {
+    padding: 20px !important;
+  }
+
+  .sp-hero-status {
+    gap: 6px !important;
+  }
+
+  .sp-hero-status > div {
+    padding: 9px !important;
+  }
+
+  .sp-hero-status strong {
+    font-size: 13px !important;
+  }
+
+  .sp-status-grid {
+    gap: 7px !important;
+  }
+
+  .sp-status-grid article {
+    min-height: 96px !important;
+    padding: 11px !important;
+  }
+
+  .sp-status-grid strong {
+    font-size: 19px !important;
+  }
+
+  .sp-task-row {
+    grid-template-columns: 34px 1fr auto !important;
+  }
+
+  .sp-task-row .sp-row-action {
+    grid-column: 3;
+  }
+
+  .sp-compact-task {
+    grid-template-columns: 29px 1fr 7px 36px 36px !important;
+    gap: 7px !important;
+  }
+
+  .sp-plan-tabs button {
+    font-size: 8px !important;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sp-topbar,
+  .sp-nav,
+  .sp-sheet,
+  .sp-now-card,
+  .sp-status-grid article,
+  .sp-plan-button,
+  .sp-task-row,
+  .sp-compact-task,
+  .sp-report,
+  .mg-template-card,
+  .mg-handoff-card,
+  .mg-weekly-card,
+  .mg-problem-card {
+    background: #fffaf2 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
