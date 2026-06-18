@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   SHIFT_ORDER, SHIFT_LABELS, PRIORITY_LABELS, loadData, loadPrefs, loadLearning, saveData, savePrefs, saveLearning,
   makeTask, sortTasks, estimateTask, buildPlan, updateLearning, formatDuration, formatTime, parseVoiceCommand, findTask,
-  parseSpokenTime, snapshotDay, id,
+  parseSpokenTime, snapshotDay, id, defaultData,
 } from './modelV2.js';
 import { DayTemplateBanner, HandoffIntelligence, ManagerInsights } from './ManagementPanels.jsx';
 
@@ -232,6 +232,21 @@ export default function AppV2() {
     reader.readAsText(file); event.target.value = '';
   };
 
+  const resetToday = () => {
+    const ok = window.confirm('Reset today\'s workspace? This clears today\'s checkmarks, notes, interruptions, and custom tasks, but keeps History, learned times, and settings.');
+    if (!ok) return;
+    setFocus(null);
+    setInterruptDraft(null);
+    updateData(current => ({
+      ...defaultData(current.date),
+      history: current.history || [],
+      activeShift: current.activeShift || activeShift,
+    }));
+    setSheet(null);
+    setTab('today');
+    showToast('Today reset. History and learned times were kept.');
+  };
+
   return <div className="sp-app">
     <header className="sp-topbar">
       <div className="sp-logo">SP</div><div className="sp-brand"><strong>ShiftPilot</strong><span>{new Intl.DateTimeFormat('en-US',{weekday:'long',month:'short',day:'numeric'}).format(now)}</span></div>
@@ -294,7 +309,7 @@ export default function AppV2() {
     {sheet && <Sheet onClose={()=>setSheet(null)}>
       {sheet==='plan' && <PlanSheet planTab={planTab} setPlanTab={setPlanTab} data={data} setData={setData} prefs={prefs} setPrefs={setPrefs} learning={learning} activeShift={activeShift} setActiveShift={setActiveShift} plan={plan} startFocus={startFocus} setInterruptDraft={setInterruptDraft}/>} 
       {sheet==='manual' && <ManualSheet title={manualTitle} setTitle={setManualTitle} shift={activeShift} onAdd={()=>{addTask(manualTitle);setManualTitle('');setSheet(null)}} startVoice={startVoice}/>} 
-      {sheet==='settings' && <SettingsSheet exportBackup={exportBackup} importRef={importRef}/>} 
+      {sheet==='settings' && <SettingsSheet exportBackup={exportBackup} importRef={importRef} resetToday={resetToday}/>} 
       {sheet?.type==='walk' && <WalkSheet task={data.tasks.find(t=>t.id===sheet.taskId)} toggle={itemId=>toggleWalkItem(sheet.taskId,itemId)} complete={()=>{completeTask(sheet.taskId);setSheet(null)}}/>}
     </Sheet>}
 
@@ -364,7 +379,7 @@ function PlanSheet({ planTab,setPlanTab,data,setData,prefs,setPrefs,learning,act
 }
 
 function ManualSheet({title,setTitle,shift,onAdd,startVoice}) { return <><header className="sp-sheet-head"><span>ADD TASK</span><h2>What needs doing?</h2></header><label className="sp-field">Task name<input autoFocus value={title} onChange={e=>setTitle(e.target.value)} placeholder="Example: fill beer cooler" onKeyDown={e=>e.key==='Enter'&&onAdd()}/></label><div className="sp-sheet-actions"><button onClick={startVoice}><Icon name="mic"/> Voice</button><button className="primary" onClick={onAdd}><Icon name="plus"/> Add to {SHIFT_LABELS[shift]}</button></div></>; }
-function SettingsSheet({exportBackup,importRef}) { return <><header className="sp-sheet-head"><span>SETTINGS</span><h2>Data and backups</h2><p>Everything remains on this phone. Backups prevent browser cleanup from becoming an archaeological event.</p></header><button className="sp-settings-row" onClick={exportBackup}><Icon name="download"/><div><strong>Download backup</strong><small>Tasks, history, preferences, learned times</small></div><Icon name="chevron"/></button><button className="sp-settings-row" onClick={()=>importRef.current?.click()}><Icon name="upload"/><div><strong>Restore backup</strong><small>Load a ShiftPilot backup file</small></div><Icon name="chevron"/></button></>; }
+function SettingsSheet({exportBackup,importRef,resetToday}) { return <><header className="sp-sheet-head"><span>SETTINGS</span><h2>Data and backups</h2><p>Everything remains on this phone. Backups prevent browser cleanup from becoming an archaeological event.</p></header><button className="sp-settings-row" onClick={exportBackup}><Icon name="download"/><div><strong>Download backup</strong><small>Tasks, history, preferences, learned times</small></div><Icon name="chevron"/></button><button className="sp-settings-row" onClick={()=>importRef.current?.click()}><Icon name="upload"/><div><strong>Restore backup</strong><small>Load a ShiftPilot backup file</small></div><Icon name="chevron"/></button><button className="sp-settings-row" onClick={resetToday}><Icon name="alert"/><div><strong>Reset today's workspace</strong><small>Fresh start today, while keeping History and learned times</small></div><Icon name="chevron"/></button></>; }
 
 function WalkSheet({task,toggle,complete}) {
   if(!task)return null; const top=task.walkItems.filter(x=>!x.parent);
