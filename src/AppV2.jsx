@@ -11,6 +11,33 @@ const INTERRUPTIONS = [
   ['Employee question', 5, 'employee'], ['Phone call', 5, 'phone'], ['Cleanup', 10, 'cleanup'], ['Other', 10, 'other'],
 ];
 
+const parseLocalTime = (dateKey, hhmm) => {
+  if (!hhmm) return null;
+  const [hour, minute] = String(hhmm).split(':').map(Number);
+  if (Number.isNaN(hour) || Number.isNaN(minute)) return null;
+  const value = new Date(`${dateKey}T00:00:00`);
+  value.setHours(hour, minute, 0, 0);
+  return value;
+};
+
+const minutesBetween = (from, to) => Math.max(0, Math.floor((to.getTime() - from.getTime()) / 60000));
+const minutesSince = (from, to) => Math.max(0, Math.floor((to.getTime() - from.getTime()) / 60000));
+const taskWord = count => `task${count === 1 ? '' : 's'}`;
+
+function describeShift(data, prefs, shift, now, plan) {
+  const clockOut = parseLocalTime(data.date, prefs.clockOut?.[shift]);
+  const shiftStart = parseLocalTime(data.date, prefs.shiftStart?.[shift]);
+  const minutesUntilStart = shiftStart && now < shiftStart ? minutesBetween(now, shiftStart) : 0;
+  const minutesPastEnd = clockOut && now > clockOut ? minutesSince(clockOut, now) : 0;
+
+  let state = 'active';
+  if (clockOut && now > clockOut) state = 'ended';
+  else if (shiftStart && now < shiftStart) state = 'before';
+  else if (clockOut && plan.available <= 30) state = 'wrap';
+
+  return { state, clockOut, shiftStart, minutesUntilStart, minutesPastEnd };
+}
+
 function Icon({ name, size = 22 }) {
   const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true };
   const path = {
@@ -61,9 +88,11 @@ export default function AppV2() {
   const activeShift = data.activeShift || prefs.activeShift || 'morning';
   const plan = useMemo(() => buildPlan(data, prefs, learning, activeShift, now), [data, prefs, learning, activeShift, now]);
   const shiftTasks = useMemo(() => sortTasks(data.tasks.filter(t => t.shift === activeShift && !t.excluded)), [data.tasks, activeShift]);
-  const next = plan.items[0];
   const completedCount = shiftTasks.filter(t => t.completed).length;
   const progress = shiftTasks.length ? Math.round(completedCount / shiftTasks.length * 100) : 0;
+  const shiftMeta = useMemo(() => describeShift(data, prefs, activeShift, now, plan), [data, prefs, activeShift, now, plan]);
+  const uiPlan = useMemo(() => ({ ...plan, shiftState: shiftMeta.state, minutesPastEnd: shiftMeta.minutesPastEnd, minutesUntilStart: shiftMeta.minutesUntilStart }), [plan, shiftMeta]);
+  const next = plan.items[0];
 
   const updateData = fn => setData(current => typeof fn === 'function' ? fn(current) : fn);
   const showToast = message => setToast(message);
@@ -146,6 +175,7 @@ export default function AppV2() {
 
   const startFocus = item => {
     if (!item) return;
+    if (shiftMeta.state === 'ended') { setTab('handoff'); return showToast('Shift ended. Create a handoff or reset today.'); }
     setFocus({ taskId: item.task.id, durationSec: Math.max(60, item.allotted * 60), startedAt: Date.now(), pausedAt: null, pausedMs: 0, running: true });
   };
   const focusTask = focus ? data.tasks.find(t => t.id === focus.taskId) : null;
@@ -247,6 +277,69 @@ export default function AppV2() {
     showToast('Today reset. History and learned times were kept.');
   };
 
+  const openPlan = () => { setPlanTab('live'); setSheet('plan'); };
+  const showTasks = () => { setSheet(null); setTab('tasks'); };
+  const showHandoff = () => { setSheet(null); setTab('handoff'); };
+  const heroTitle = shiftMeta.state === 'ended' ? `${SHIFT_LABELS[activeShift]} shift ended` : shiftMeta.state === 'before' ? `${SHIFT_LABELS[activeShift]} shift soon` : shiftMeta.state === 'wrap' ? 'Wrap-up mode' : `${SHIFT_LABELS[activeShift]} shift`;
+  const heroCopy = shiftMeta.state === 'ended'
+    ? `${formatDuration(shiftMeta.minutesPastEnd)} past shift end. Wrap it, hand it off, or reset.`
+    : shiftMeta.state === 'before'
+      ? `Starts ${shiftMeta.shiftStart ? formatTime(shiftMeta.shiftStart) : 'soon'}. Get staged before the chaos discovers you.`
+      : shiftMeta.state === 'wrap'
+        ? 'Close the loop before the next shift inherits mystery soup.'
+        : data.truckDay ? 'Truck day is on. Loretta owns bookwork.' : 'Live plan is ready.';
+  const heroMetrics = [
+    { label: 'Clock out', value: shiftMeta.clockOut ? formatTime(shiftMeta.clockOut) : 'Not set', tone: '' },
+    shiftMeta.state === 'before'
+      ? { label: 'Starts in', value: formatDuration(shiftMeta.minutesUntilStart), tone: 'ahead' }
+      : shiftMeta.state === 'ended'
+        ? { label: 'Time left', value: 'Ended', tone: 'ended' }
+        : { label: 'Time left', value: formatDuration(plan.available), tone: '' },
+    shiftMeta.state === 'ended'
+      ? { label: 'Past shift end', value: formatDuration(shiftMeta.minutesPastEnd), tone: 'ended' }
+      : shiftMeta.state === 'before'
+        ? { label: 'Workload', value: formatDuration(plan.estimateTotal), tone: plan.behindBy ? 'behind' : 'ahead' }
+        : { label: plan.behindBy ? 'Behind' : 'Ahead', value: formatDuration(plan.behindBy || plan.aheadBy), tone: plan.behindBy ? 'behind' : 'ahead' },
+  ];
+  const upcomingItems = shiftMeta.state === 'ended' ? plan.items.slice(0, 4) : plan.items.slice(1, 5);
+
+  const renderNowCard = () => {
+    if (shiftMeta.state === 'ended') return <section className="sp-now-card sp-now-card-ended">
+      <div className="sp-now-head"><span>SHIFT ENDED</span><b>{progress}% shift complete</b></div>
+      <h2>Wrap up or reset</h2>
+      <div className="sp-now-details"><span>Clocked out {shiftMeta.clockOut ? formatTime(shiftMeta.clockOut) : 'earlier'}</span><span>{formatDuration(shiftMeta.minutesPastEnd)} past shift end</span><span>{plan.items.length} unfinished {taskWord(plan.items.length)}</span></div>
+      <p className="sp-learned">Review leftovers, create a handoff, or reset the day. Do not let the app pretend 7 PM bookwork is a personality trait.</p>
+      <div className="sp-now-actions"><button className="sp-secondary-action" onClick={showTasks}>Review leftovers</button><button className="sp-focus-start" onClick={showHandoff}><Icon name="share"/> Create handoff</button></div>
+      <button className="sp-subtle-reset" onClick={resetToday}>Reset day</button>
+    </section>;
+
+    if (shiftMeta.state === 'before') return <section className="sp-now-card sp-now-card-staging">
+      <div className="sp-now-head"><span>SHIFT STARTS SOON</span><b>{progress}% shift complete</b></div>
+      <h2>Get staged</h2>
+      <div className="sp-now-details"><span>Start {shiftMeta.shiftStart ? formatTime(shiftMeta.shiftStart) : 'soon'}</span><span>Clock out {shiftMeta.clockOut ? formatTime(shiftMeta.clockOut) : 'not set'}</span><span>{formatDuration(plan.estimateTotal)} planned</span></div>
+      <p className="sp-learned">Check the plan now so Future You has fewer reasons to mutter in the office.</p>
+      <button className="sp-focus-start" onClick={openPlan}><Icon name="plan"/> Plan this shift</button>
+    </section>;
+
+    if (shiftMeta.state === 'wrap' && plan.items.length) return <section className="sp-now-card sp-now-card-wrap">
+      <div className="sp-now-head"><span>WRAP-UP MODE</span><b>{progress}% shift complete</b></div>
+      <h2>Create the handoff</h2>
+      <div className="sp-now-details"><span><Icon name="clock" size={16}/>{formatDuration(plan.available)} left</span><span>{formatDuration(plan.estimateTotal)} work left</span><span>{plan.items.length} unfinished {taskWord(plan.items.length)}</span></div>
+      <p className="sp-learned">You are close to clock-out. Stop starting big stuff and make the next handoff clean.</p>
+      <div className="sp-now-actions"><button className="sp-secondary-action" onClick={showTasks}>Review leftovers</button><button className="sp-focus-start" onClick={showHandoff}><Icon name="share"/> Create handoff</button></div>
+    </section>;
+
+    return <section className="sp-now-card">
+      <div className="sp-now-head"><span>{next ? 'DO THIS NOW' : 'SHIFT COMPLETE'}</span><b>{progress}% shift complete</b></div>
+      {next ? <>
+        <h2>{next.task.title}</h2>
+        <div className="sp-now-details"><span><Icon name="clock" size={16}/>{next.allotted} minutes</span>{next.finish && <span>Finish by {formatTime(next.finish)}</span>}<span className={`sp-priority ${next.task.priority}`}>{PRIORITY_LABELS[next.task.priority]}</span></div>
+        {next.estimate.source === 'learned' && <p className="sp-learned">Personalized from your actual completion history.</p>}
+        <button className="sp-focus-start" onClick={() => startFocus(next)}><Icon name="play"/> Start Focus Mode</button>
+      </> : <div className="sp-empty-now"><Icon name="check" size={36}/><h2>All clear for this shift</h2><p>Everything planned is complete. Save the summary or go enjoy not being haunted by a checklist.</p><button className="sp-focus-start" onClick={showHandoff}><Icon name="share"/> Review summary</button></div>}
+    </section>;
+  };
+
   return <div className="sp-app">
     <header className="sp-topbar">
       <div className="sp-logo">SP</div><div className="sp-brand"><strong>ShiftPilot</strong><span>{new Intl.DateTimeFormat('en-US',{weekday:'long',month:'short',day:'numeric'}).format(now)}</span></div>
@@ -255,41 +348,31 @@ export default function AppV2() {
 
     <main className="sp-main">
       {tab === 'today' && <section className="sp-page sp-page-enter">
-        <div className="sp-hero">
-          <div className="sp-hero-row"><div><span className="sp-kicker">GUIDED COMMAND CENTER</span><h1>{SHIFT_LABELS[activeShift]} shift</h1></div>
+        <div className={`sp-hero shift-${shiftMeta.state}`}>
+          <div className="sp-hero-row"><div><span className="sp-kicker">GUIDED COMMAND CENTER</span><h1>{heroTitle}</h1><p className="sp-hero-copy">{heroCopy}</p></div>
             <label className="sp-truck"><input type="checkbox" checked={data.truckDay} onChange={toggleTruck}/><span/><b>Truck Day</b></label></div>
           <div className="sp-shift-tabs">{SHIFT_ORDER.map(shift => <button className={shift===activeShift?'active':''} key={shift} onClick={()=>setActiveShift(shift)}>{SHIFT_LABELS[shift]}</button>)}</div>
           <div className="sp-hero-status">
-            <div><span>Clock out</span><strong>{plan.clockOut ? formatTime(plan.clockOut) : 'Not set'}</strong></div>
-            <div><span>Time left</span><strong>{formatDuration(plan.available)}</strong></div>
-            <div className={plan.behindBy ? 'behind' : 'ahead'}><span>{plan.behindBy ? 'Behind' : 'Ahead'}</span><strong>{formatDuration(plan.behindBy || plan.aheadBy)}</strong></div>
+            {heroMetrics.map(metric => <div key={metric.label} className={metric.tone}><span>{metric.label}</span><strong>{metric.value}</strong></div>)}
           </div>
         </div>
 
         <button className={`sp-voice ${listening?'listening':''}`} onClick={startVoice}><span><Icon name="mic" size={28}/></span><div><strong>{listening?'Listening…':'Tell ShiftPilot'}</strong><small>Add, complete, move, hand off, or set clock-out</small></div></button>
 
-        <section className="sp-now-card">
-          <div className="sp-now-head"><span>DO THIS NOW</span><b>{progress}% shift complete</b></div>
-          {next ? <>
-            <h2>{next.task.title}</h2>
-            <div className="sp-now-details"><span><Icon name="clock" size={16}/>{next.allotted} minutes</span><span>Finish by {formatTime(next.finish)}</span><span className={`sp-priority ${next.task.priority}`}>{PRIORITY_LABELS[next.task.priority]}</span></div>
-            {next.estimate.source === 'learned' && <p className="sp-learned">Personalized from your actual completion history.</p>}
-            <button className="sp-focus-start" onClick={()=>startFocus(next)}><Icon name="play"/> Start Focus Mode</button>
-          </> : <div className="sp-empty-now"><Icon name="check" size={36}/><h2>Shift complete</h2><p>Everything planned for this shift is done.</p></div>}
-        </section>
+        {renderNowCard()}
 
         <div className="sp-status-grid">
-          <article><span>WORK LEFT</span><strong>{formatDuration(plan.estimateTotal)}</strong><small>{plan.items.length} task{plan.items.length===1?'':'s'}</small></article>
+          <article><span>WORK LEFT</span><strong>{formatDuration(plan.estimateTotal)}</strong><small>{plan.items.length} {taskWord(plan.items.length)}</small></article>
           <article><span>INTERRUPTIONS</span><strong>{formatDuration(plan.interruptionMinutes)}</strong><small>logged today</small></article>
           <article><span>COMPLETED</span><strong>{completedCount}/{shiftTasks.length}</strong><div className="sp-progress"><i style={{width:`${progress}%`}}/></div></article>
         </div>
 
-        <button className="sp-plan-button" onClick={()=>{setPlanTab('live');setSheet('plan')}}><Icon name="plan"/><div><strong>Plan My Shift</strong><small>Live plan, priorities, clock-out, interruptions</small></div><Icon name="chevron"/></button>
+        <button className="sp-plan-button" onClick={openPlan}><Icon name="plan"/><div><strong>{shiftMeta.state === 'ended' ? 'Review Shift' : 'Plan My Shift'}</strong><small>Live plan, priorities, clock-out, interruptions</small></div><Icon name="chevron"/></button>
 
-        <div className="sp-section-title"><div><span>COMING UP</span><h2>Next tasks</h2></div><button onClick={()=>setTab('tasks')}>See all</button></div>
+        <div className="sp-section-title"><div><span>{shiftMeta.state === 'ended' ? 'LEFTOVERS' : 'COMING UP'}</span><h2>{shiftMeta.state === 'ended' ? 'Carry over or hand off' : 'Next tasks'}</h2></div><button onClick={()=>setTab('tasks')}>See all</button></div>
         <div className="sp-upcoming">
-          {plan.items.slice(1,5).map((item,index)=><CompactTask key={item.task.id} item={item} index={index+2} onFocus={()=>startFocus(item)} onComplete={()=>completeTask(item.task.id)} onWalk={()=>setSheet({type:'walk',taskId:item.task.id})}/>) }
-          {!plan.items.slice(1,5).length && <div className="sp-empty-list">No later tasks waiting.</div>}
+          {upcomingItems.map((item,index)=><CompactTask key={item.task.id} item={item} index={shiftMeta.state === 'ended' ? index+1 : index+2} shiftState={shiftMeta.state} onFocus={()=>startFocus(item)} onComplete={()=>completeTask(item.task.id)} onWalk={()=>setSheet({type:'walk',taskId:item.task.id})}/>) }
+          {!upcomingItems.length && <div className="sp-empty-list">{shiftMeta.state === 'ended' ? 'No unfinished tasks. This rare miracle has been logged emotionally.' : 'No later tasks waiting.'}</div>}
         </div>
       </section>}
 
@@ -307,7 +390,7 @@ export default function AppV2() {
     </nav>
 
     {sheet && <Sheet onClose={()=>setSheet(null)}>
-      {sheet==='plan' && <PlanSheet planTab={planTab} setPlanTab={setPlanTab} data={data} setData={setData} prefs={prefs} setPrefs={setPrefs} learning={learning} activeShift={activeShift} setActiveShift={setActiveShift} plan={plan} startFocus={startFocus} setInterruptDraft={setInterruptDraft}/>} 
+      {sheet==='plan' && <PlanSheet planTab={planTab} setPlanTab={setPlanTab} data={data} setData={setData} prefs={prefs} setPrefs={setPrefs} learning={learning} activeShift={activeShift} setActiveShift={setActiveShift} plan={uiPlan} startFocus={startFocus} setInterruptDraft={setInterruptDraft}/>} 
       {sheet==='manual' && <ManualSheet title={manualTitle} setTitle={setManualTitle} shift={activeShift} onAdd={()=>{addTask(manualTitle);setManualTitle('');setSheet(null)}} startVoice={startVoice}/>} 
       {sheet==='settings' && <SettingsSheet exportBackup={exportBackup} importRef={importRef} resetToday={resetToday}/>} 
       {sheet?.type==='walk' && <WalkSheet task={data.tasks.find(t=>t.id===sheet.taskId)} toggle={itemId=>toggleWalkItem(sheet.taskId,itemId)} complete={()=>{completeTask(sheet.taskId);setSheet(null)}}/>}
@@ -322,8 +405,11 @@ export default function AppV2() {
   </div>;
 }
 
-function CompactTask({ item, index, onFocus, onComplete, onWalk }) {
-  return <article className="sp-compact-task"><span className="sp-seq">{index}</span><div><strong>{item.task.title}</strong><small>{item.allotted} min · finish {formatTime(item.finish)}</small></div><span className={`sp-dot ${item.task.priority}`}/>{item.task.type==='walk'?<button onClick={onWalk}>Open</button>:<button onClick={onFocus}><Icon name="play" size={16}/></button>}<button onClick={onComplete}><Icon name="check" size={16}/></button></article>;
+function CompactTask({ item, index, onFocus, onComplete, onWalk, shiftState = 'active' }) {
+  const ended = shiftState === 'ended';
+  const before = shiftState === 'before';
+  const timing = ended ? 'carry over or hand off' : before ? 'starts after shift begins' : item.finish ? `finish ${formatTime(item.finish)}` : 'finish window not set';
+  return <article className={`sp-compact-task ${ended ? 'ended' : ''}`}><span className="sp-seq">{index}</span><div><strong>{item.task.title}</strong><small>{item.allotted} min · {timing}</small></div><span className={`sp-dot ${item.task.priority}`}/>{item.task.type==='walk'?<button onClick={onWalk}>Open</button>:!ended&&<button onClick={onFocus}><Icon name="play" size={16}/></button>}<button onClick={onComplete}><Icon name="check" size={16}/></button></article>;
 }
 
 function TasksPage({ data, learning, activeShift, setActiveShift, setData, addTask, openWalk, completeTask, undoComplete }) {
@@ -368,10 +454,11 @@ function Sheet({ children, onClose }) { return <div className="sp-sheet-bg" onMo
 
 function PlanSheet({ planTab,setPlanTab,data,setData,prefs,setPrefs,learning,activeShift,setActiveShift,plan,startFocus,setInterruptDraft }) {
   const tasks=sortTasks(data.tasks.filter(t=>t.shift===activeShift&&!t.excluded));
-  return <><header className="sp-sheet-head"><span>PLAN MY SHIFT</span><h2>Guided control center</h2><p>Everything important, without six floating buttons staging a coup.</p></header>
+  const ended=plan.shiftState==='ended';
+  return <><header className="sp-sheet-head"><span>PLAN MY SHIFT</span><h2>{ended?'Shift review':'Guided control center'}</h2><p>{ended?'Clock-out has passed. Handle leftovers instead of inventing a second shift.':'Everything important, without six floating buttons staging a coup.'}</p></header>
     <div className="sp-plan-tabs">{[['live','Live Plan'],['priority','Priorities'],['clock','Clock-out'],['interrupt','Interruptions']].map(([v,l])=><button className={planTab===v?'active':''} key={v} onClick={()=>setPlanTab(v)}>{l}</button>)}</div>
     <div className="sp-shift-tabs light">{SHIFT_ORDER.map(s=><button key={s} className={s===activeShift?'active':''} onClick={()=>setActiveShift(s)}>{SHIFT_LABELS[s]}</button>)}</div>
-    {planTab==='live'&&<div className="sp-plan-list"><div className={`sp-plan-banner ${plan.behindBy?'behind':'ahead'}`}><strong>{plan.behindBy?`${formatDuration(plan.behindBy)} too much work`:`${formatDuration(plan.aheadBy)} breathing room`}</strong><span>{plan.clockOut?`Clock-out ${formatTime(plan.clockOut)}`:'Set clock-out for live guidance'}</span></div>{plan.items.map((item,i)=><article key={item.task.id}><span>{i+1}</span><div><strong>{item.task.title}</strong><small>{formatTime(item.start)}–{formatTime(item.finish)} · smart estimate {item.estimate.minutes}m</small></div><b>{item.allotted}m</b>{i===0&&<button onClick={()=>startFocus(item)}><Icon name="play" size={16}/></button>}</article>)}</div>}
+    {planTab==='live'&&<div className="sp-plan-list"><div className={`sp-plan-banner ${ended?'ended':plan.behindBy?'behind':'ahead'}`}><strong>{ended?'Shift ended':plan.behindBy?`${formatDuration(plan.behindBy)} too much work`:`${formatDuration(plan.aheadBy)} breathing room`}</strong><span>{ended?'Create a handoff, reset, or carry leftovers forward.':plan.clockOut?`Clock-out ${formatTime(plan.clockOut)}`:'Set clock-out for live guidance'}</span></div>{plan.items.map((item,i)=><article key={item.task.id}><span>{i+1}</span><div><strong>{item.task.title}</strong><small>{ended||!item.start||!item.finish?`Carry over · smart estimate ${item.estimate.minutes}m`:`${formatTime(item.start)}–${formatTime(item.finish)} · smart estimate ${item.estimate.minutes}m`}</small></div><b>{item.allotted}m</b>{i===0&&!ended&&<button onClick={()=>startFocus(item)}><Icon name="play" size={16}/></button>}</article>)}</div>}
     {planTab==='priority'&&<div className="sp-priority-list">{tasks.map(task=><article key={task.id}><div><strong>{task.title}</strong><small>{estimateTask(task,learning).minutes} min</small></div><div>{['urgent','high','normal','low'].map(p=><button key={p} disabled={task.priority==='required'} className={task.priority===p?'selected':''} onClick={()=>setData(current=>({...current,tasks:current.tasks.map(t=>t.id===task.id?{...t,priority:p}:t)}))}>{p}</button>)}</div></article>)}</div>}
     {planTab==='clock'&&<div className="sp-clock-settings"><label>Clock-out time<input type="time" value={prefs.clockOut?.[activeShift]||''} onChange={e=>setPrefs(current=>({...current,clockOut:{...current.clockOut,[activeShift]:e.target.value}}))}/></label><label>Available labor hours<input type="number" min="0" step=".25" value={data.shiftHours?.[activeShift]??''} onChange={e=>setData(current=>({...current,shiftHours:{...current.shiftHours,[activeShift]:Math.max(0,Number(e.target.value))}}))}/></label><p>Clock-out drives your live personal plan. Labor hours still show whether the shift workload fits the staffing available.</p></div>}
     {planTab==='interrupt'&&<div><button className="sp-log-interrupt" onClick={()=>setInterruptDraft({label:'Register backup',minutes:10,type:'register',fromFocus:false})}><Icon name="alert"/> Log an interruption</button><div className="sp-interrupt-list">{(data.interruptions||[]).filter(x=>x.shift===activeShift&&x.date===data.date).slice().reverse().map(x=><article key={x.id}><strong>{x.label}</strong><span>{x.minutes} min</span></article>)}</div></div>}
