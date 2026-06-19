@@ -1,0 +1,22 @@
+.sp-scope-note,
+.sp-scope-note-light {
+  margin: 10px 0 8px !important;
+  padding: 10px 12px !important;
+  border-radius: 16px !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  letter-spacing: .04em !important;
+  line-height: 1.25 !important;
+}
+
+.sp-scope-note {
+  background: rgba(255, 255, 255, .12) !important;
+  color: rgba(255, 255, 255, .82) !important;
+  border: 1px solid rgba(255, 255, 255, .14) !important;
+}
+
+.sp-scope-note-light {
+  background: #eef4e9 !important;
+  color: #536a50 !important;
+  border: 1px solid rgba(116, 137, 109, .16) !important;
+}
