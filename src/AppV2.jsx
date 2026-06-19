@@ -376,7 +376,7 @@ export default function AppV2() {
         </div>
       </section>}
 
-      {tab === 'tasks' && <TasksPage data={data} learning={learning} activeShift={activeShift} setActiveShift={setActiveShift} setData={setData} addTask={()=>setSheet('manual')} openWalk={taskId=>setSheet({type:'walk',taskId})} completeTask={completeTask} undoComplete={undoComplete}/>} 
+      {tab === 'tasks' && <TasksPage data={data} learning={learning} activeShift={activeShift} shiftState={shiftMeta.state} setActiveShift={setActiveShift} setData={setData} addTask={()=>setSheet('manual')} openWalk={taskId=>setSheet({type:'walk',taskId})} completeTask={completeTask} undoComplete={undoComplete}/>} 
       {tab === 'handoff' && <HandoffPage data={data} activeShift={activeShift} setData={setData} handoffText={handoffText()} summaryText={dailySummaryText()} share={share} extraText={extraText} setExtraText={setExtraText}/>} 
       {tab === 'history' && <HistoryPage data={data} learning={learning} share={share}/>} 
     </main>
@@ -409,20 +409,24 @@ function CompactTask({ item, index, onFocus, onComplete, onWalk, shiftState = 'a
   const ended = shiftState === 'ended';
   const before = shiftState === 'before';
   const timing = ended ? 'carry over or hand off' : before ? 'starts after shift begins' : item.finish ? `finish ${formatTime(item.finish)}` : 'finish window not set';
-  return <article className={`sp-compact-task ${ended ? 'ended' : ''}`}><span className="sp-seq">{index}</span><div><strong>{item.task.title}</strong><small>{item.allotted} min · {timing}</small></div><span className={`sp-dot ${item.task.priority}`}/>{item.task.type==='walk'?<button onClick={onWalk}>Open</button>:!ended&&<button onClick={onFocus}><Icon name="play" size={16}/></button>}<button onClick={onComplete}><Icon name="check" size={16}/></button></article>;
+  return <article className={`sp-compact-task ${ended ? 'ended' : ''}`}><span className="sp-seq">{index}</span><div><strong>{item.task.title}</strong><small>{item.allotted} min · {timing}</small></div><span className={`sp-dot ${item.task.priority}`}/>{item.task.type==='walk'?<button onClick={onWalk}>{item.task.completed ? 'View' : 'Open'}</button>:!ended&&<button onClick={onFocus}><Icon name="play" size={16}/></button>}<button onClick={onComplete}><Icon name="check" size={16}/></button></article>;
 }
 
-function TasksPage({ data, learning, activeShift, setActiveShift, setData, addTask, openWalk, completeTask, undoComplete }) {
+function TasksPage({ data, learning, activeShift, shiftState, setActiveShift, setData, addTask, openWalk, completeTask, undoComplete }) {
+  const tasks = sortTasks(data.tasks.filter(t=>t.shift===activeShift&&!t.excluded));
+  const doneCount = tasks.filter(t=>t.completed).length;
+  const allDone = tasks.length > 0 && doneCount === tasks.length;
   return <section className="sp-page sp-page-enter"><div className="sp-page-head"><div><span className="sp-kicker dark">PLAN THE WORK</span><h1>Tasks</h1></div><button className="sp-small-primary" onClick={addTask}><Icon name="plus" size={18}/> Add</button></div>
     <div className="sp-shift-tabs light">{SHIFT_ORDER.map(shift=><button key={shift} className={shift===activeShift?'active':''} onClick={()=>setActiveShift(shift)}>{SHIFT_LABELS[shift]}</button>)}</div>
+    {(shiftState === 'ended' || allDone) && <div className="sp-complete-banner"><span>{SHIFT_LABELS[activeShift].toUpperCase()} RECORD</span><strong>{allDone ? 'Shift complete' : 'Shift ended'}</strong><small>{doneCount} of {tasks.length} {taskWord(tasks.length)} finished</small></div>}
     <DayTemplateBanner data={data}/>
     <div className="sp-hours-card"><div><span>AVAILABLE LABOR HOURS</span><strong>{data.shiftHours?.[activeShift] || 0}</strong></div><input type="number" min="0" step=".25" value={data.shiftHours?.[activeShift]??''} onChange={e=>setData(current=>({...current,shiftHours:{...current.shiftHours,[activeShift]:e.target.value===''?'':Math.max(0,Number(e.target.value))}}))}/></div>
-    <div className="sp-task-stack">{sortTasks(data.tasks.filter(t=>t.shift===activeShift&&!t.excluded)).map(task=>{
+    <div className="sp-task-stack">{tasks.map(task=>{
       const estimate=estimateTask(task,learning); return <article className={`sp-task-row ${task.completed?'done':''} ${task.skipped?'skipped':''}`} key={task.id}>
         <button className="sp-check" onClick={()=>task.completed?undoComplete(task.id):completeTask(task.id)}>{task.completed&&<Icon name="check" size={17}/>}</button>
         <div onClick={()=>task.type==='walk'&&openWalk(task.id)}><strong>{task.title}</strong><small>{estimate.minutes} min · {estimate.category}{task.skipped?' · skipped':''}</small></div>
         <span className={`sp-priority ${task.priority}`}>{PRIORITY_LABELS[task.priority]}</span>
-        {task.type==='walk'&&<button className="sp-row-action" onClick={()=>openWalk(task.id)}>Open</button>}
+        {task.type==='walk'&&<button className="sp-row-action" onClick={()=>openWalk(task.id)}>{task.completed ? 'View' : 'Open'}</button>}
       </article>})}</div>
   </section>;
 }
@@ -442,7 +446,7 @@ function HandoffPage({ data, activeShift, setData, handoffText, summaryText, sha
 
 function HistoryPage({ data, learning, share }) {
   const history=data.history||[];
-  const learned=Object.values(learning).sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0,4);
+  const learned=Object.values(learning).filter(item=>Number(item.count)>=2).sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0,4);
   return <section className="sp-page sp-page-enter"><div className="sp-page-head"><div><span className="sp-kicker dark">MANAGER RECORDS</span><h1>History</h1></div></div>
     <ManagerInsights data={data} learning={learning} share={share}/>
     {learned.length>0&&<div className="sp-learning-card"><h2>Your real pace</h2>{learned.map(item=><div key={item.title}><strong>{item.title}</strong><span>{item.average} min average · {item.count} finishes</span></div>)}</div>}
