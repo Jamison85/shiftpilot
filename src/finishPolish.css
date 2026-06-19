@@ -48,15 +48,15 @@
 }
 
 .sp-app {
-  padding-bottom: 156px !important;
+  padding-bottom: 198px !important;
 }
 
 .sp-main {
-  padding-bottom: 142px !important;
+  padding-bottom: 188px !important;
 }
 
 .sp-page {
-  padding-bottom: 154px !important;
+  padding-bottom: 198px !important;
 }
 
 .sp-status-grid article {
@@ -174,13 +174,75 @@
   color: #9f3946 !important;
 }
 
+.sp-complete-banner {
+  margin: 0 0 14px !important;
+  padding: 16px 18px !important;
+  border-radius: 24px !important;
+  background: linear-gradient(145deg, rgba(238, 244, 233, 0.92), rgba(255, 255, 255, 0.88)) !important;
+  border: 1px solid rgba(116, 137, 109, 0.18) !important;
+  box-shadow: 0 16px 36px rgba(16, 37, 56, 0.08) !important;
+}
+
+.sp-complete-banner span,
+.sp-complete-banner strong,
+.sp-complete-banner small {
+  display: block !important;
+}
+
+.sp-complete-banner span {
+  color: #536a50 !important;
+  font-size: 9px !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.14em !important;
+}
+
+.sp-complete-banner strong {
+  margin-top: 5px !important;
+  color: #102538 !important;
+  font-size: 24px !important;
+  letter-spacing: -0.05em !important;
+}
+
+.sp-complete-banner small {
+  margin-top: 4px !important;
+  color: #61707c !important;
+  font-size: 12px !important;
+}
+
+.sp-log-interrupt {
+  background: linear-gradient(145deg, #e4b85a, #ead08a) !important;
+  color: #102538 !important;
+  box-shadow: 0 18px 36px rgba(176, 133, 36, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+}
+
+.sp-log-interrupt svg {
+  color: #102538 !important;
+}
+
+.sp-interruption-types button.active {
+  background: #fff4d6 !important;
+  border-color: rgba(130, 97, 17, 0.45) !important;
+  color: #826111 !important;
+}
+
+.sp-report:last-child,
+.sp-history-list,
+.mg-problem-card:last-child,
+.sp-task-stack {
+  margin-bottom: 120px !important;
+}
+
+.sp-history-list {
+  padding-bottom: 100px !important;
+}
+
 @media (max-width: 420px) {
   .sp-now-actions {
     grid-template-columns: 1fr !important;
   }
 
   .sp-page {
-    padding-bottom: 164px !important;
+    padding-bottom: 208px !important;
   }
 }
 
