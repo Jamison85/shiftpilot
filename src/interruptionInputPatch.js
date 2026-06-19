@@ -5,6 +5,12 @@ if (typeof window !== 'undefined' && !window.__shiftPilotClientPatch) {
 
   const DATA_KEY = 'shiftpilot:data:v1';
 
+  const todayKey = () => {
+    const d = new Date();
+    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+    return local.toISOString().slice(0, 10);
+  };
+
   const style = document.createElement('style');
   style.textContent = `
     .sp-scope-note,.sp-scope-note-light{margin:10px 0 8px!important;padding:10px 12px!important;border-radius:16px!important;font-size:10px!important;font-weight:900!important;letter-spacing:.04em!important;line-height:1.25!important}
@@ -26,6 +32,19 @@ if (typeof window !== 'undefined' && !window.__shiftPilotClientPatch) {
     };
   };
 
+  const scopeForRolloverSnapshot = data => {
+    if (!data || typeof data !== 'object') return data;
+    const activeShift = data.activeShift || 'morning';
+    return {
+      ...data,
+      tasks: (data.tasks || []).map(task => task.shift && task.shift !== activeShift ? { ...task, excluded: true } : task),
+      interruptions: (data.interruptions || []).filter(item => !item.shift || item.shift === activeShift),
+      handoffNotes: { [activeShift]: data.handoffNotes?.[activeShift] || '' },
+      extraCompleted: data.extraCompleted || [],
+      history: (data.history || []).map(record => scopeHistoryRecord(record, activeShift)),
+    };
+  };
+
   const scopeStoredData = data => {
     if (!data || typeof data !== 'object') return data;
     const activeShift = data.activeShift || 'morning';
@@ -35,18 +54,33 @@ if (typeof window !== 'undefined' && !window.__shiftPilotClientPatch) {
     };
   };
 
+  const originalGetItem = window.localStorage.getItem.bind(window.localStorage);
+  const originalSetItem = window.localStorage.setItem.bind(window.localStorage);
+
+  window.localStorage.getItem = key => {
+    const value = originalGetItem(key);
+    if (key !== DATA_KEY || !value) return value;
+    try {
+      const parsed = JSON.parse(value);
+      const scoped = parsed?.date && parsed.date !== todayKey() ? scopeForRolloverSnapshot(parsed) : scopeStoredData(parsed);
+      return JSON.stringify(scoped);
+    } catch {
+      return value;
+    }
+  };
+
   const normalizeStoredData = () => {
     try {
-      const raw = window.localStorage.getItem(DATA_KEY);
+      const raw = originalGetItem(DATA_KEY);
       if (!raw) return;
-      const scoped = scopeStoredData(JSON.parse(raw));
-      window.localStorage.setItem(DATA_KEY, JSON.stringify(scoped));
+      const parsed = JSON.parse(raw);
+      const scoped = parsed?.date && parsed.date !== todayKey() ? scopeForRolloverSnapshot(parsed) : scopeStoredData(parsed);
+      originalSetItem(DATA_KEY, JSON.stringify(scoped));
     } catch {
       // Leave damaged storage alone. The main app already has its own fallback.
     }
   };
 
-  const originalSetItem = window.localStorage.setItem.bind(window.localStorage);
   window.localStorage.setItem = (key, value) => {
     if (key === DATA_KEY) {
       try {
