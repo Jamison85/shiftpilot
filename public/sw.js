@@ -1,4 +1,4 @@
-const CACHE='shiftpilot-v6-findtrail';
+const CACHE='shiftpilot-v7-findtrail-depth';
 const APP_SHELL=['/','/index.html','/findtrail.html','/manifest.webmanifest','/findtrail-manifest.webmanifest','/icon.svg','/findtrail-icon.svg','/calm-poster.svg'];
 
 self.addEventListener('install',event=>{
