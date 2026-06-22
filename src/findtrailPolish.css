@@ -1,0 +1,300 @@
+.home-screen {
+  justify-content: flex-start;
+  padding-top: calc(72px + env(safe-area-inset-top, 0px));
+  gap: 14px;
+}
+
+.home-screen .brand-mark {
+  width: 76px;
+  height: 76px;
+  margin-top: 0;
+}
+
+.home-screen h1 {
+  max-width: 11ch;
+  font-size: clamp(2rem, 9.3vw, 3.35rem);
+}
+
+.slogan-pill {
+  width: fit-content;
+  margin: 2px 0 6px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  color: var(--forest);
+  background: rgba(255, 253, 247, 0.58);
+  border: 1px solid rgba(72, 100, 90, 0.12);
+  font-weight: 850;
+  box-shadow: 0 10px 24px rgba(38, 51, 47, 0.07);
+}
+
+.top-bar {
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 12px;
+}
+
+.back-btn {
+  min-width: 58px;
+  min-height: 48px;
+  padding: 0 12px;
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(38, 51, 47, 0.06);
+}
+
+.top-action-btn {
+  min-height: 42px;
+  max-width: 86px;
+  padding: 0 10px;
+  border: 1px solid rgba(72, 100, 90, 0.18);
+  border-radius: 16px;
+  color: var(--forest);
+  background: rgba(255, 253, 247, 0.65);
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.item-icon {
+  display: grid;
+  place-items: center;
+}
+
+.item-icon::after {
+  display: none;
+}
+
+.item-icon > span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--forest);
+  font-size: 1.25rem;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.item-icon.money > span { font-size: 1.05rem; }
+.item-icon.phone > span { transform: rotate(0deg); }
+.item-icon.glasses > span { font-size: 1.55rem; }
+.item-icon.custom > span { transform: translateY(-4px); }
+
+.choice-btn.selected {
+  background: rgba(168, 207, 163, 0.25);
+  border-color: rgba(72, 100, 90, 0.26);
+  box-shadow: inset 0 0 0 2px rgba(72, 100, 90, 0.08), 0 10px 28px rgba(38, 51, 47, 0.08);
+}
+
+.trail-meter {
+  gap: 10px;
+  align-items: center;
+}
+
+.trail-meter span {
+  position: relative;
+  height: 8px;
+  min-width: 22px;
+  border-radius: 999px;
+  background: rgba(72, 100, 90, 0.13);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.trail-meter span::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: rgba(255, 253, 247, 0.78);
+  border: 2px solid rgba(72, 100, 90, 0.16);
+}
+
+.trail-meter span.active {
+  background: rgba(72, 100, 90, 0.34);
+}
+
+.trail-meter span.active::before {
+  background: var(--forest);
+  border-color: rgba(255, 253, 247, 0.92);
+  box-shadow: 0 0 0 7px rgba(143, 175, 156, 0.24);
+}
+
+.trail-meter span.done::before {
+  background: var(--sage);
+  border-color: rgba(255, 253, 247, 0.82);
+}
+
+.journey-screen {
+  padding-top: calc(18px + env(safe-area-inset-top, 0px));
+}
+
+.journey-screen .top-bar h1 {
+  font-size: clamp(1.8rem, 8vw, 2.6rem);
+}
+
+.step-card h1 {
+  font-size: clamp(2.25rem, 11vw, 3.35rem);
+}
+
+.bottom-actions .found-btn {
+  min-height: 66px;
+  background: linear-gradient(145deg, #b7e3b1, #dff5db);
+  box-shadow: 0 16px 34px rgba(89, 128, 85, 0.24);
+}
+
+.calm-screen {
+  place-items: center;
+  background: linear-gradient(160deg, #dcebea, #f6f3ec 58%, #8faf9c);
+}
+
+.calm-video {
+  opacity: 0.52;
+  filter: saturate(1.05) contrast(1.02);
+  transform: scale(1.04);
+}
+
+.calm-overlay {
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 253, 247, 0.48), transparent 34%),
+    linear-gradient(180deg, rgba(38, 51, 47, 0.08), rgba(246, 243, 236, 0.3) 48%, rgba(38, 51, 47, 0.27));
+}
+
+.calm-content {
+  padding: 22px 18px 20px;
+  border-radius: 34px;
+  background: rgba(255, 253, 247, 0.66);
+}
+
+.calm-content h1 {
+  font-size: clamp(1.95rem, 9.2vw, 3rem);
+  max-width: 9.8ch;
+  margin-inline: auto;
+}
+
+.breath-helper {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.breath-stage {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 20px auto 8px;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+
+.breath-ring {
+  position: absolute;
+  inset: 16px;
+  border-radius: 999px;
+  border: 2px solid rgba(72, 100, 90, 0.22);
+  background: radial-gradient(circle, rgba(255,255,255,0.1), rgba(168,207,163,0.08));
+  box-shadow: 0 0 42px rgba(168, 207, 163, 0.22);
+  animation: breathRing 12s ease-in-out infinite;
+}
+
+.breath-ring.ring-two {
+  inset: 2px;
+  opacity: 0.45;
+  animation-delay: -1.5s;
+}
+
+.breath-orb {
+  position: relative;
+  z-index: 2;
+  width: 116px;
+  height: 116px;
+  margin: 0;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 38% 30%, rgba(255,255,255,0.98), rgba(220,235,234,0.8) 28%, rgba(143,175,156,0.74) 68%, rgba(72,100,90,0.8));
+  box-shadow:
+    inset 0 0 32px rgba(255,255,255,0.8),
+    0 0 0 18px rgba(255, 253, 247, 0.32),
+    0 24px 70px rgba(72,100,90,0.32);
+  transform-origin: center;
+  animation: breathPulse 12s ease-in-out infinite;
+}
+
+.breath-orb::before {
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  top: 14px;
+  right: 25px;
+  background: rgba(255, 253, 247, 0.96);
+  filter: blur(0.3px);
+  box-shadow: 0 0 22px rgba(255, 253, 247, 0.8);
+}
+
+.breath-orb span {
+  width: 38%;
+  height: 38%;
+  border-radius: inherit;
+  background: rgba(255, 253, 247, 0.42);
+  box-shadow: inset 0 0 22px rgba(255,255,255,0.4);
+}
+
+.breath-stage.inhale .breath-orb,
+.breath-stage.hold .breath-orb,
+.breath-stage.exhale .breath-orb {
+  transform: none;
+}
+
+.breath-state {
+  margin-top: 2px;
+  font-size: 1.72rem;
+  letter-spacing: -0.03em;
+}
+
+.calm-timer {
+  margin-top: 4px;
+}
+
+@keyframes breathPulse {
+  0% { transform: scale(0.78); }
+  33% { transform: scale(1.18); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(0.78); }
+}
+
+@keyframes breathRing {
+  0% { transform: scale(0.78); opacity: 0.48; }
+  33% { transform: scale(1.05); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 0.82; }
+  100% { transform: scale(0.78); opacity: 0.48; }
+}
+
+@media (max-width: 370px) {
+  .home-screen {
+    padding-top: calc(42px + env(safe-area-inset-top, 0px));
+  }
+
+  .top-action-btn {
+    max-width: 74px;
+    font-size: 0.76rem;
+  }
+
+  .breath-stage {
+    width: 190px;
+    height: 190px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breath-ring,
+  .breath-orb {
+    animation: none !important;
+  }
+}
