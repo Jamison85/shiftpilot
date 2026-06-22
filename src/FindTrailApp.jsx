@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CALM_VIDEO_SRC } from './calmVideo.js'
+import { createCalmSound } from './calmSound.js'
 import { ITEM_GUIDES, ITEM_TYPES, STORAGE_KEY, buildPath } from './findtrailData.js'
 
 const BREAK_AFTER = 3
@@ -296,6 +297,8 @@ function BreakOffer({ onBreak, onKeepGoing }) {
 
 function CalmBreak({ onResume }) {
   const [secondsLeft, setSecondsLeft] = useState(60)
+  const [soundOn, setSoundOn] = useState(false)
+  const calmSoundRef = useRef(null)
   const elapsed = 60 - secondsLeft
   const cycle = elapsed % 12
   const breathState = cycle < 4 ? 'Breathe in' : cycle < 6 ? 'Hold' : 'Breathe out'
@@ -306,6 +309,30 @@ function CalmBreak({ onResume }) {
     const timer = window.setTimeout(() => setSecondsLeft((value) => value - 1), 1000)
     return () => window.clearTimeout(timer)
   }, [secondsLeft])
+
+  useEffect(() => {
+    calmSoundRef.current?.shapeBreath(breathClass)
+  }, [breathClass])
+
+  useEffect(() => () => {
+    calmSoundRef.current?.stop()
+  }, [])
+
+  async function toggleSound() {
+    if (soundOn) {
+      calmSoundRef.current?.stop()
+      calmSoundRef.current = null
+      setSoundOn(false)
+      return
+    }
+
+    const sound = createCalmSound()
+    if (!sound) return
+    calmSoundRef.current = sound
+    await sound.start()
+    sound.shapeBreath(breathClass)
+    setSoundOn(true)
+  }
 
   return (
     <section className="calm-screen">
@@ -324,6 +351,12 @@ function CalmBreak({ onResume }) {
         </div>
         <p className="breath-state" aria-live="polite">{breathState}</p>
         <p className="tiny-note calm-timer">{secondsLeft}s left</p>
+        <div className="sound-control">
+          <button className={soundOn ? 'secondary-btn sound-btn active' : 'secondary-btn sound-btn'} onClick={toggleSound}>
+            {soundOn ? 'Sound on · tap to mute' : 'Add soft forest sound'}
+          </button>
+          <p>Low, steady, no sudden tones.</p>
+        </div>
         <div className="action-stack">
           <button className="primary-btn" onClick={onResume}>{secondsLeft <= 0 ? 'Resume search' : 'Resume when ready'}</button>
           <button className="secondary-btn" onClick={() => setSecondsLeft(60)}>Restart calm minute</button>
