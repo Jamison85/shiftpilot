@@ -1,0 +1,36 @@
+.bottom-nav-item {
+  cursor: pointer;
+  border-radius: 16px;
+  padding: 6px 4px;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.bottom-nav-item:active {
+  transform: translateY(1px);
+}
+
+.bottom-nav-item:focus-visible {
+  outline: 3px solid rgba(141, 110, 131, 0.28);
+  outline-offset: 3px;
+  background: rgba(255, 253, 249, 0.62);
+}
+
+.nav-info-panel {
+  width: 100%;
+  max-width: 342px !important;
+  margin-top: 12px !important;
+  text-align: left !important;
+}
+
+.nav-info-panel h2 {
+  margin: 0 0 8px;
+  color: var(--o3-forest, #24342E);
+  font-size: 1.05rem;
+}
+
+.nav-info-panel p {
+  margin: 0;
+  color: var(--o3-muted, #67746D);
+  line-height: 1.45;
+  font-weight: 650;
+}
