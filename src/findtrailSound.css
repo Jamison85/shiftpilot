@@ -1,0 +1,32 @@
+.sound-control {
+  width: 100%;
+  margin: 8px 0 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.sound-btn {
+  min-height: 50px !important;
+  color: var(--o3-plum, #8D6E83) !important;
+  border-color: rgba(141, 110, 131, 0.2) !important;
+  background: rgba(255, 253, 249, 0.82) !important;
+}
+
+.sound-btn.active {
+  color: #fffdf9 !important;
+  background: linear-gradient(180deg, rgba(157, 125, 148, 0.96), rgba(141, 110, 131, 0.96)) !important;
+  border-color: rgba(255, 255, 255, 0.26) !important;
+  box-shadow: 0 14px 32px rgba(141, 110, 131, 0.28), inset 0 1px 0 rgba(255,255,255,0.26) !important;
+}
+
+.sound-control p {
+  margin: 0;
+  color: rgba(36, 52, 46, 0.68);
+  font-size: 0.78rem;
+  font-weight: 750;
+  text-align: center;
+}
+
+.calm-content .sound-control + .action-stack {
+  margin-top: 0 !important;
+}
