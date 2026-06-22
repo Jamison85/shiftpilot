@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import FindTrailApp from './FindTrailApp.jsx'
+import './calmVideoInjector.js'
 import './findtrail.css'
 
 ReactDOM.createRoot(document.getElementById('findtrail-root')).render(
