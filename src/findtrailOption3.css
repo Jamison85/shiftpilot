@@ -1,0 +1,144 @@
+:root {
+  --o3-bg: #F8F3ED;
+  --o3-surface: rgba(255, 253, 249, 0.9);
+  --o3-sage: #91AD9D;
+  --o3-sage-dark: #6F8D7E;
+  --o3-forest: #24342E;
+  --o3-muted: #67746D;
+  --o3-plum: #8D6E83;
+  --o3-mauve: #E8D8E1;
+  --o3-border: rgba(36, 52, 46, 0.10);
+  --o3-shadow: 0 22px 60px rgba(36, 52, 46, 0.11), 0 6px 18px rgba(36, 52, 46, 0.05);
+  --o3-soft-shadow: 0 12px 30px rgba(36, 52, 46, 0.08), 0 2px 8px rgba(36, 52, 46, 0.04);
+}
+
+html, body { background: var(--o3-bg) !important; }
+
+.findtrail-app {
+  color: var(--o3-forest) !important;
+  background:
+    radial-gradient(circle at 20% 8%, rgba(255,255,255,0.82), transparent 20rem),
+    radial-gradient(circle at 78% 18%, rgba(232,216,225,0.34), transparent 18rem),
+    radial-gradient(circle at 12% 95%, rgba(145,173,157,0.20), transparent 18rem),
+    linear-gradient(180deg, #fbf8f2 0%, var(--o3-bg) 48%, #f1eae4 100%) !important;
+}
+
+.findtrail-app::before,
+.findtrail-app::after,
+.screen::before,
+.brand-mark::after,
+.slogan-pill::before,
+.found-btn::after,
+.step-card::before,
+.step-card::after,
+.calm-content::before,
+.calm-content::after { display: none !important; }
+
+.ambient { opacity: 0.28 !important; filter: blur(32px) !important; }
+.screen { max-width: 456px !important; padding-left: 22px !important; padding-right: 22px !important; }
+
+.option3-home {
+  justify-content: flex-start !important;
+  align-items: center !important;
+  text-align: center !important;
+  padding-top: calc(36px + env(safe-area-inset-top, 0px)) !important;
+  gap: 11px !important;
+}
+
+.option3-home .brand-mark {
+  width: 86px !important;
+  height: 86px !important;
+  margin: 0 auto 2px !important;
+}
+
+.brand-mark {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.92), rgba(246,242,236,0.76)),
+    radial-gradient(circle at 50% 20%, rgba(255,255,255,0.96), rgba(145,173,157,0.18) 58%, transparent) !important;
+  border: 1px solid rgba(255,255,255,0.84) !important;
+  box-shadow: var(--o3-soft-shadow) !important;
+}
+
+.eyebrow {
+  color: var(--o3-sage-dark) !important;
+  font-size: 0.8rem !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+}
+
+.hero-title,
+.home-screen h1,
+.top-bar h1,
+.step-card h1,
+.center-screen h1,
+.found-screen h1,
+.saved-screen h1,
+.calm-content h1 {
+  font-family: Georgia, 'Times New Roman', ui-serif, serif !important;
+  color: var(--o3-forest) !important;
+  letter-spacing: -0.055em !important;
+  line-height: 0.96 !important;
+  font-weight: 700 !important;
+}
+
+.option3-home h1,
+.hero-title {
+  max-width: 9.9ch !important;
+  font-size: clamp(2.85rem, 12vw, 4.55rem) !important;
+  margin: 4px auto 0 !important;
+}
+
+.lead,
+.top-bar p,
+.item-card small,
+.item-intro span,
+.step-card p,
+.tiny-note,
+.option3-helper-card span { color: var(--o3-muted) !important; }
+
+.option3-home .lead {
+  max-width: 28rem !important;
+  font-size: clamp(1rem, 4vw, 1.13rem) !important;
+  line-height: 1.48 !important;
+  margin: 2px auto 0 !important;
+}
+
+.slogan-pill {
+  align-self: center !important;
+  color: var(--o3-plum) !important;
+  background: rgba(232, 216, 225, 0.56) !important;
+  border: 1px solid rgba(141,110,131,0.16) !important;
+  box-shadow: none !important;
+  margin: 2px auto 0 !important;
+}
+
+.hero-illustration,
+.step-illustration {
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at 68% 28%, rgba(232,216,225,0.72), transparent 12%),
+    linear-gradient(180deg, rgba(255,253,249,0.62), rgba(237,241,234,0.64) 38%, rgba(205,219,209,0.74));
+  border: 1px solid rgba(255,255,255,0.86);
+  box-shadow: var(--o3-soft-shadow);
+}
+
+.hero-illustration {
+  width: min(100%, 342px);
+  height: 126px;
+  margin: 3px auto 2px;
+  border-radius: 30px;
+}
+
+.step-illustration { width: 84px; height: 84px; border-radius: 999px; flex: 0 0 auto; }
+.step-illustration.mini { width: 62px; height: 62px; }
+.landscape-sun,.landscape-layer,.landscape-path,.landscape-tree { position: absolute; display: block; }
+.landscape-sun { width: 42px; height: 42px; border-radius: 999px; right: 19%; top: 22%; background: rgba(232,216,225,0.84); }
+.landscape-layer { left: -10%; right: -10%; bottom: -18%; height: 78%; border-radius: 55% 45% 0 0; }
+.layer-one { background: #cddbd1; transform: translateX(-18%) translateY(8%) rotate(-3deg); opacity: 0.76; }
+.layer-two { background: #aebfb4; transform: translateX(20%) translateY(19%) rotate(4deg); opacity: 0.8; }
+.landscape-path { left: 48%; bottom: -18%; width: 16%; height: 82%; background: var(--o3-bg); border-radius: 999px 999px 0 0; transform: rotate(12deg); box-shadow: 0 0 0 8px rgba(248,243,237,0.44); z-index: 3; }
+.landscape-tree { bottom: 12%; width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-bottom: 34px solid #668777; z-index: 4; opacity: 0.9; }
+.tree-one { left: 14%; }
+.tree-two { right: 14%; transform: scale(0.78); opacity: 0.72; }
