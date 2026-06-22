@@ -4,6 +4,7 @@ import FindTrailApp from './FindTrailApp.jsx'
 import './findtrail.css'
 import './findtrailPolish.css'
 import './findtrailDepth.css'
+import './findtrailLuxuryDepth.css'
 
 ReactDOM.createRoot(document.getElementById('findtrail-root')).render(
   <React.StrictMode>
