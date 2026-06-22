@@ -102,6 +102,7 @@ export default function FindTrailApp() {
 
   function saveFound() {
     const location = foundLocation || currentStep?.title || 'Found place'
+    setFoundLocation(location)
     const entry = {
       id: `${Date.now()}`,
       itemId,
@@ -158,16 +159,18 @@ export default function FindTrailApp() {
 
 function HomeScreen({ history, onStart, onBreak }) {
   return (
-    <section className="screen home-screen">
+    <section className="screen home-screen option3-home">
       <div className="brand-mark" aria-hidden="true"><span /></div>
       <p className="eyebrow">FindTrail</p>
-      <h1>A calm path to finding lost things.</h1>
-      <p className="lead">Choose the item, follow one simple stop at a time, and let the checklist carry the thinking.</p>
+      <h1 className="hero-title">A calm path to finding lost things.</h1>
+      <p className="lead">Choose the item, follow one simple step at a time, and let the checklist carry the thinking.</p>
       <p className="slogan-pill">For lost things, not lost minds.</p>
+      <TrailIllustration className="hero-illustration" />
       <div className="action-stack">
-        <button className="primary-btn" onClick={onStart}>Start finding</button>
-        <button className="secondary-btn" onClick={onBreak}>Take a calm minute</button>
+        <button className="primary-btn" onClick={onStart}>Start finding <span aria-hidden="true">→</span></button>
+        <button className="secondary-btn calm-btn" onClick={onBreak}><span aria-hidden="true">♡</span> Take a calm minute</button>
       </div>
+      <BottomNav />
       {history.length > 0 && (
         <div className="history-card">
           <h2>Recent found places</h2>
@@ -184,10 +187,21 @@ function HomeScreen({ history, onStart, onBreak }) {
   )
 }
 
+function BottomNav() {
+  return (
+    <nav className="bottom-nav" aria-label="FindTrail quick sections">
+      <span className="bottom-nav-item active"><span aria-hidden="true">⌂</span>Home</span>
+      <span className="bottom-nav-item"><span aria-hidden="true">◷</span>History</span>
+      <span className="bottom-nav-item"><span aria-hidden="true">♡</span>Care</span>
+      <span className="bottom-nav-item"><span aria-hidden="true">⚙</span>Settings</span>
+    </nav>
+  )
+}
+
 function ItemScreen({ onBack, onChoose }) {
   return (
-    <section className="screen">
-      <TopBar title="What are we finding?" subtitle="Pick one. The path adapts from there." onBack={onBack} />
+    <section className="screen option3-items">
+      <TopBar title="What are we finding?" subtitle="Pick one. The path adapts from there." onBack={onBack} illustration />
       <div className="item-grid">
         {ITEM_TYPES.map((item) => (
           <button className="item-card" key={item.id} onClick={() => onChoose(item.id)}>
@@ -203,14 +217,17 @@ function ItemScreen({ onBack, onChoose }) {
 
 function QuestionScreen({ item, question, selectedAnswer, questionIndex, questionCount, onAnswer, onBack }) {
   return (
-    <section className="screen">
-      <TopBar title={question.title} subtitle={question.subtitle} onBack={onBack} />
+    <section className="screen option3-question">
+      <TopBar title={question.title} subtitle={question.subtitle} onBack={onBack} illustration />
       <TrailMeter current={questionIndex + 1} total={questionCount} label="Clue" />
-      <div className="soft-card item-intro">
-        <p>{item.title}</p>
-        <span>{item.subtitle}</span>
+      <div className="soft-card item-intro option3-helper-card">
+        <span className="helper-icon" aria-hidden="true">?</span>
+        <div>
+          <p>{item.title}</p>
+          <span>{item.subtitle}</span>
+        </div>
       </div>
-      <div className="option-stack">
+      <div className="option-stack option3-option-card">
         {question.options.map((option) => <button className={selectedAnswer === option ? 'choice-btn selected' : 'choice-btn'} key={option} onClick={() => onAnswer(option)}>{option}</button>)}
       </div>
     </section>
@@ -221,13 +238,25 @@ function JourneyScreen({ item, path, stepIndex, completedSteps, checkedItems, on
   const step = path[stepIndex]
   const doneCount = step.checklist.filter((label) => checkedItems[`${stepIndex}:${label}`]).length
   return (
-    <section className="screen journey-screen">
-      <TopBar title={`Trail Stop ${stepIndex + 1}`} subtitle={calmLines[stepIndex % calmLines.length]} actionLabel="Change clues" onAction={onEditClues} />
+    <section className="screen journey-screen option3-journey">
+      <TopBar title="Trail Stop" subtitle={calmLines[stepIndex % calmLines.length]} actionLabel="Change clues" onAction={onEditClues} />
       <TrailMeter current={stepIndex + 1} total={path.length} label="Stop" completedSteps={completedSteps} />
       <article className={`step-card tag-${step.tag}`}>
-        <p className="step-kicker">{item.title}</p>
-        <h1>{step.title}</h1>
-        <p>{step.instruction}</p>
+        <div className="editorial-step-head">
+          <div>
+            <p className="step-kicker">{item.title}</p>
+            <h1>{stepIndex + 1}. {step.title}</h1>
+            <p>{step.instruction}</p>
+          </div>
+          <TrailIllustration className="step-illustration" />
+        </div>
+        <div className="option3-helper-card step-helper-card">
+          <span className="helper-icon plum" aria-hidden="true">!</span>
+          <div>
+            <strong>Try to notice</strong>
+            <span>Work down this list slowly. One small check at a time.</span>
+          </div>
+        </div>
         <div className="checklist" role="group" aria-label={`${step.title} checklist`}>
           {step.checklist.map((label) => {
             const checked = checkedItems[`${stepIndex}:${label}`]
@@ -243,8 +272,8 @@ function JourneyScreen({ item, path, stepIndex, completedSteps, checkedItems, on
       </article>
       <div className="bottom-actions">
         <button className="found-btn" onClick={onFound}>Found it</button>
-        <button className="primary-btn" onClick={onChecked}>Checked this</button>
-        <button className="secondary-btn" onClick={onBreak}>I need a break</button>
+        <button className="primary-btn" onClick={onChecked}>Next step <span aria-hidden="true">→</span></button>
+        <button className="secondary-btn calm-btn" onClick={onBreak}>I need a break</button>
       </div>
     </section>
   )
@@ -359,15 +388,15 @@ function FinalSweep({ onFound, onBreak, onRestart, onHome }) {
   )
 }
 
-function TopBar({ title, subtitle, onBack, actionLabel, onAction }) {
+function TopBar({ title, subtitle, onBack, actionLabel, onAction, illustration = false }) {
   return (
-    <header className="top-bar">
-      {onBack ? <button className="back-btn" onClick={onBack} aria-label="Go back">Back</button> : <span />}
+    <header className={illustration ? 'top-bar top-bar-illustrated' : 'top-bar'}>
+      {onBack ? <button className="back-btn" onClick={onBack} aria-label="Go back">‹</button> : <span />}
       <div>
         <h1>{title}</h1>
         {subtitle && <p>{subtitle}</p>}
       </div>
-      {actionLabel && onAction ? <button className="top-action-btn" onClick={onAction}>{actionLabel}</button> : null}
+      {actionLabel && onAction ? <button className="top-action-btn" onClick={onAction}>{actionLabel}</button> : illustration ? <TrailIllustration className="step-illustration mini" /> : null}
     </header>
   )
 }
@@ -378,6 +407,19 @@ function TrailMeter({ current, total, label }) {
       {Array.from({ length: total }).map((_, index) => (
         <span key={index} className={index + 1 < current ? 'done' : index + 1 === current ? 'active' : ''} />
       ))}
+    </div>
+  )
+}
+
+function TrailIllustration({ className = '' }) {
+  return (
+    <div className={className} aria-hidden="true">
+      <span className="landscape-sun" />
+      <span className="landscape-layer layer-one" />
+      <span className="landscape-layer layer-two" />
+      <span className="landscape-path" />
+      <span className="landscape-tree tree-one" />
+      <span className="landscape-tree tree-two" />
     </div>
   )
 }
