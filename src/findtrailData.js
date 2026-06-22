@@ -16,7 +16,7 @@ const makeStep = (title, instruction, checklist, tag = 'home') => ({ title, inst
 export const ITEM_GUIDES = {
   money: {
     title: 'Money trail',
-    subtitle: 'A calm route through pockets, paper, cars, and laundry.',
+    subtitle: 'A calm route through pockets, paper, the car, and laundry.',
     foundOptions: ['Current pocket', 'Previous pocket', 'Wallet', 'Laundry', 'Car', 'Bag or receipt', 'Counter', 'Trash'],
     questions: [
       { id: 'moneyKind', title: 'What kind of money?', subtitle: 'Simple clue. No remembering required.', options: ['Cash', 'Card', 'Both', 'Not sure'] },
@@ -26,7 +26,7 @@ export const ITEM_GUIDES = {
   },
   keys: {
     title: 'Keys trail',
-    subtitle: 'A calm route through doors, pockets, counters, cars, and bags.',
+    subtitle: 'A calm route through doors, pockets, counters, the car, and bags.',
     foundOptions: ['Door area', 'Pocket', 'Jacket', 'Counter', 'Car', 'Couch', 'Bag', 'Bathroom'],
     questions: [
       { id: 'keyType', title: 'Which keys?', subtitle: 'Choose the closest match.', options: ['Car keys', 'House keys', 'Work keys', 'Whole key ring'] },
@@ -43,7 +43,7 @@ export const ITEM_GUIDES = {
   },
   wallet: {
     title: 'Wallet trail',
-    subtitle: 'A simple route through pockets, cars, entry spots, bags, and seating areas.',
+    subtitle: 'A simple route through pockets, the car, entry spots, bags, and seating areas.',
     foundOptions: ['Pants pocket', 'Jacket', 'Car', 'Entry area', 'Bedside', 'Couch', 'Bag', 'Store bag'],
     questions: [
       { id: 'walletKind', title: 'What kind of wallet?', subtitle: 'This helps choose the early stops.', options: ['Pocket wallet', 'Phone wallet', 'Bag wallet', 'Not sure'] },
