@@ -1,8 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
+import { CALM_VIDEO_SRC } from './calmVideo.js'
 import { ITEM_GUIDES, ITEM_TYPES, STORAGE_KEY, buildPath } from './findtrailData.js'
 
 const BREAK_AFTER = 3
 const calmLines = ['One step at a time.', 'Only this area right now.', 'No rushing. No blame.', 'The checklist is doing the thinking.']
+const itemSymbols = {
+  money: '$',
+  keys: '⌁',
+  phone: '▯',
+  wallet: '▰',
+  medicine: '+',
+  glasses: '∞',
+  remote: '•',
+  custom: '…',
+}
 
 function loadHistory() {
   try {
@@ -60,7 +71,15 @@ export default function FindTrailApp() {
       setQuestionIndex(questionIndex + 1)
       return
     }
+    setStepIndex(0)
+    setCompletedSteps([])
+    setCheckedItems({})
     setScreen('journey')
+  }
+
+  function editClues() {
+    setQuestionIndex(0)
+    setScreen('questions')
   }
 
   function checkListItem(label) {
@@ -121,10 +140,10 @@ export default function FindTrailApp() {
       {screen === 'home' && <HomeScreen history={history} onStart={() => setScreen('items')} onBreak={() => setScreen('calm')} />}
       {screen === 'items' && <ItemScreen onBack={() => setScreen('home')} onChoose={startItem} />}
       {screen === 'questions' && guide && question && (
-        <QuestionScreen item={guide} question={question} questionIndex={questionIndex} questionCount={guide.questions.length} onAnswer={answerQuestion} onBack={() => questionIndex === 0 ? setScreen('items') : setQuestionIndex(questionIndex - 1)} />
+        <QuestionScreen item={guide} question={question} selectedAnswer={answers[question.id]} questionIndex={questionIndex} questionCount={guide.questions.length} onAnswer={answerQuestion} onBack={() => questionIndex === 0 ? setScreen('items') : setQuestionIndex(questionIndex - 1)} />
       )}
       {screen === 'journey' && currentStep && (
-        <JourneyScreen item={guide} path={path} stepIndex={stepIndex} completedSteps={completedSteps} checkedItems={checkedItems} onToggle={checkListItem} onFound={() => setScreen('found')} onChecked={markChecked} onBreak={() => setScreen('calm')} />
+        <JourneyScreen item={guide} path={path} stepIndex={stepIndex} completedSteps={completedSteps} checkedItems={checkedItems} onToggle={checkListItem} onFound={() => setScreen('found')} onChecked={markChecked} onBreak={() => setScreen('calm')} onEditClues={editClues} />
       )}
       {screen === 'breakOffer' && <BreakOffer onBreak={() => setScreen('calm')} onKeepGoing={() => setScreen('journey')} />}
       {screen === 'calm' && <CalmBreak onResume={() => setScreen(currentStep ? 'journey' : 'home')} />}
@@ -144,6 +163,7 @@ function HomeScreen({ history, onStart, onBreak }) {
       <p className="eyebrow">FindTrail</p>
       <h1>A calm path to finding lost things.</h1>
       <p className="lead">Choose the item, follow one simple stop at a time, and let the checklist carry the thinking.</p>
+      <p className="slogan-pill">For lost things, not lost minds.</p>
       <div className="action-stack">
         <button className="primary-btn" onClick={onStart}>Start finding</button>
         <button className="secondary-btn" onClick={onBreak}>Take a calm minute</button>
@@ -171,7 +191,7 @@ function ItemScreen({ onBack, onChoose }) {
       <div className="item-grid">
         {ITEM_TYPES.map((item) => (
           <button className="item-card" key={item.id} onClick={() => onChoose(item.id)}>
-            <span className={`item-icon ${item.id}`} aria-hidden="true" />
+            <span className={`item-icon ${item.id}`} aria-hidden="true"><span>{itemSymbols[item.id]}</span></span>
             <strong>{item.label}</strong>
             <small>{item.hint}</small>
           </button>
@@ -181,7 +201,7 @@ function ItemScreen({ onBack, onChoose }) {
   )
 }
 
-function QuestionScreen({ item, question, questionIndex, questionCount, onAnswer, onBack }) {
+function QuestionScreen({ item, question, selectedAnswer, questionIndex, questionCount, onAnswer, onBack }) {
   return (
     <section className="screen">
       <TopBar title={question.title} subtitle={question.subtitle} onBack={onBack} />
@@ -191,18 +211,18 @@ function QuestionScreen({ item, question, questionIndex, questionCount, onAnswer
         <span>{item.subtitle}</span>
       </div>
       <div className="option-stack">
-        {question.options.map((option) => <button className="choice-btn" key={option} onClick={() => onAnswer(option)}>{option}</button>)}
+        {question.options.map((option) => <button className={selectedAnswer === option ? 'choice-btn selected' : 'choice-btn'} key={option} onClick={() => onAnswer(option)}>{option}</button>)}
       </div>
     </section>
   )
 }
 
-function JourneyScreen({ item, path, stepIndex, completedSteps, checkedItems, onToggle, onFound, onChecked, onBreak }) {
+function JourneyScreen({ item, path, stepIndex, completedSteps, checkedItems, onToggle, onFound, onChecked, onBreak, onEditClues }) {
   const step = path[stepIndex]
   const doneCount = step.checklist.filter((label) => checkedItems[`${stepIndex}:${label}`]).length
   return (
     <section className="screen journey-screen">
-      <TopBar title={`Trail Stop ${stepIndex + 1}`} subtitle={calmLines[stepIndex % calmLines.length]} />
+      <TopBar title={`Trail Stop ${stepIndex + 1}`} subtitle={calmLines[stepIndex % calmLines.length]} actionLabel="Change clues" onAction={onEditClues} />
       <TrailMeter current={stepIndex + 1} total={path.length} label="Stop" completedSteps={completedSteps} />
       <article className={`step-card tag-${step.tag}`}>
         <p className="step-kicker">{item.title}</p>
@@ -261,15 +281,20 @@ function CalmBreak({ onResume }) {
   return (
     <section className="calm-screen">
       <video className="calm-video" autoPlay muted loop playsInline preload="auto" poster="/calm-poster.svg" aria-hidden="true">
-        <source src="/calm-breathing.mp4" type="video/mp4" />
+        <source src={CALM_VIDEO_SRC} type="video/mp4" />
       </video>
       <div className="calm-overlay" />
       <div className="calm-content">
         <p className="eyebrow">Calm minute</p>
         <h1>You are still on the path.</h1>
-        <div className={`breath-orb ${breathClass}`} aria-hidden="true"><span /></div>
+        <p className="breath-helper">Follow the circle.</p>
+        <div className={`breath-stage ${breathClass}`} aria-hidden="true">
+          <span className="breath-ring ring-one" />
+          <span className="breath-ring ring-two" />
+          <div className="breath-orb"><span /></div>
+        </div>
         <p className="breath-state" aria-live="polite">{breathState}</p>
-        <p className="tiny-note">{secondsLeft}s left</p>
+        <p className="tiny-note calm-timer">{secondsLeft}s left</p>
         <div className="action-stack">
           <button className="primary-btn" onClick={onResume}>{secondsLeft <= 0 ? 'Resume search' : 'Resume when ready'}</button>
           <button className="secondary-btn" onClick={() => setSecondsLeft(60)}>Restart calm minute</button>
@@ -334,7 +359,7 @@ function FinalSweep({ onFound, onBreak, onRestart, onHome }) {
   )
 }
 
-function TopBar({ title, subtitle, onBack }) {
+function TopBar({ title, subtitle, onBack, actionLabel, onAction }) {
   return (
     <header className="top-bar">
       {onBack ? <button className="back-btn" onClick={onBack} aria-label="Go back">Back</button> : <span />}
@@ -342,6 +367,7 @@ function TopBar({ title, subtitle, onBack }) {
         <h1>{title}</h1>
         {subtitle && <p>{subtitle}</p>}
       </div>
+      {actionLabel && onAction ? <button className="top-action-btn" onClick={onAction}>{actionLabel}</button> : null}
     </header>
   )
 }
