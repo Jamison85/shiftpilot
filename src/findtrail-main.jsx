@@ -7,15 +7,10 @@ import './findtrailDepth.css'
 import './findtrailLuxuryDepth.css'
 import './findtrailVideoVisibility.css'
 import './findtrailProfessional.css'
+import './findtrailOption3.css'
 
 ReactDOM.createRoot(document.getElementById('findtrail-root')).render(
   <React.StrictMode>
     <FindTrailApp />
   </React.StrictMode>,
 )
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {})
-  })
-}
