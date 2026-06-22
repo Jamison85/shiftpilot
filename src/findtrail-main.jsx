@@ -8,6 +8,7 @@ import './findtrailLuxuryDepth.css'
 import './findtrailVideoVisibility.css'
 import './findtrailProfessional.css'
 import './findtrailOption3.css'
+import './findtrailMockupMatch.css'
 
 ReactDOM.createRoot(document.getElementById('findtrail-root')).render(
   <React.StrictMode>
