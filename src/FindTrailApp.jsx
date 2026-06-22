@@ -353,9 +353,9 @@ function CalmBreak({ onResume }) {
         <p className="tiny-note calm-timer">{secondsLeft}s left</p>
         <div className="sound-control">
           <button className={soundOn ? 'secondary-btn sound-btn active' : 'secondary-btn sound-btn'} onClick={toggleSound}>
-            {soundOn ? 'Sound on · tap to mute' : 'Add soft forest sound'}
+            {soundOn ? 'Breath tone on · tap to mute' : 'Add gentle breath tone'}
           </button>
-          <p>Low, steady, no sudden tones.</p>
+          <p>Warm tone, no hiss or chimes.</p>
         </div>
         <div className="action-stack">
           <button className="primary-btn" onClick={onResume}>{secondsLeft <= 0 ? 'Resume search' : 'Resume when ready'}</button>
