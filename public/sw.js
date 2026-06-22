@@ -1,4 +1,4 @@
-const CACHE='shiftpilot-v10-findtrail-visible-video';
+const CACHE='shiftpilot-v11-findtrail-clearer-video';
 const APP_SHELL=['/','/index.html','/findtrail.html','/manifest.webmanifest','/findtrail-manifest.webmanifest','/icon.svg','/findtrail-icon.svg','/calm-poster.svg'];
 
 self.addEventListener('install',event=>{
