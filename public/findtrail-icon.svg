@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="FindTrail icon">
+  <rect width="512" height="512" rx="112" fill="#F6F3EC"/>
+  <circle cx="155" cy="144" r="90" fill="#DCEBEA"/>
+  <circle cx="375" cy="390" r="118" fill="#A8CFA3" opacity=".62"/>
+  <path d="M118 355c44-82 93-126 146-133 66-8 105 36 139-25" fill="none" stroke="#48645A" stroke-width="28" stroke-linecap="round" stroke-dasharray="3 54"/>
+  <path d="M248 125c83 30 116 97 92 172-63-5-121-45-146-107 16-29 34-51 54-65Z" fill="#8FAF9C"/>
+  <path d="M230 153c42 47 66 92 73 136" fill="none" stroke="#48645A" stroke-width="14" stroke-linecap="round" opacity=".72"/>
+  <circle cx="118" cy="355" r="24" fill="#48645A"/>
+  <circle cx="403" cy="197" r="24" fill="#48645A"/>
+</svg>

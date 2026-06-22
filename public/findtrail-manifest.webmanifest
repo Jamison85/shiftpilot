@@ -1,0 +1,22 @@
+{
+  "name": "FindTrail",
+  "short_name": "FindTrail",
+  "description": "A calm, TBI-friendly path to finding lost things.",
+  "id": "/findtrail.html",
+  "start_url": "/findtrail.html",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#F6F3EC",
+  "theme_color": "#8FAF9C",
+  "orientation": "portrait",
+  "categories": ["productivity", "health", "utilities"],
+  "icons": [
+    {
+      "src": "/findtrail-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

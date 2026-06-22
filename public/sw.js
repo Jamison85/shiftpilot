@@ -1,5 +1,5 @@
-const CACHE='shiftpilot-v5';
-const APP_SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];
+const CACHE='shiftpilot-v6-findtrail';
+const APP_SHELL=['/','/index.html','/findtrail.html','/manifest.webmanifest','/findtrail-manifest.webmanifest','/icon.svg','/findtrail-icon.svg','/calm-poster.svg'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(APP_SHELL)));
@@ -15,14 +15,16 @@ self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
 
   if(event.request.mode==='navigate'){
+    const url=new URL(event.request.url);
+    const fallback=url.pathname.includes('findtrail')?'/findtrail.html':'/index.html';
     event.respondWith(
       fetch(event.request)
         .then(response=>{
           const copy=response.clone();
-          caches.open(CACHE).then(cache=>cache.put('/index.html',copy));
+          caches.open(CACHE).then(cache=>cache.put(fallback,copy));
           return response;
         })
-        .catch(()=>caches.match('/index.html'))
+        .catch(()=>caches.match(fallback))
     );
     return;
   }
