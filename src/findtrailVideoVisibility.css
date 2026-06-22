@@ -1,0 +1,74 @@
+.calm-screen {
+  background: #20352f !important;
+}
+
+.calm-video {
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 0 !important;
+  filter: saturate(1.18) contrast(1.02) brightness(0.9) !important;
+  transform: scale(1.08) !important;
+}
+
+.calm-overlay {
+  z-index: 1 !important;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 253, 247, 0.10), transparent 28%),
+    linear-gradient(180deg, rgba(32, 53, 47, 0.12), rgba(32, 53, 47, 0.02) 42%, rgba(32, 53, 47, 0.22)) !important;
+  backdrop-filter: none !important;
+}
+
+.calm-content {
+  z-index: 2 !important;
+  background: rgba(255, 253, 247, 0.34) !important;
+  border-color: rgba(255, 255, 255, 0.66) !important;
+  backdrop-filter: blur(8px) saturate(1.08) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.08) !important;
+}
+
+.calm-content::before {
+  opacity: 0.36 !important;
+}
+
+.calm-content::after {
+  opacity: 0.26 !important;
+}
+
+.calm-content h1,
+.calm-content .eyebrow,
+.breath-helper,
+.breath-state,
+.calm-timer {
+  color: #20352f !important;
+  text-shadow: 0 1px 0 rgba(255, 253, 247, 0.5), 0 10px 24px rgba(32, 53, 47, 0.16) !important;
+}
+
+.breath-stage {
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255,253,247,0.2), rgba(255,253,247,0.06) 48%, transparent 70%);
+}
+
+.breath-ring {
+  background:
+    radial-gradient(circle, rgba(255, 253, 247, 0.24), rgba(168, 207, 163, 0.16) 52%, transparent 72%),
+    conic-gradient(from 90deg, rgba(255, 253, 247, 0.84), rgba(143, 175, 156, 0.24), rgba(255, 253, 247, 0.78), rgba(220,235,234,0.28), rgba(255,253,247,0.84)) !important;
+}
+
+.breath-orb {
+  background:
+    radial-gradient(circle at 34% 26%, #fffdf7 0 10%, #e9f4ee 19%, #a8cfa3 48%, #48645a 100%) !important;
+}
+
+@media (max-width: 380px) {
+  .calm-content {
+    background: rgba(255, 253, 247, 0.28) !important;
+    backdrop-filter: blur(6px) saturate(1.06) !important;
+    -webkit-backdrop-filter: blur(6px) saturate(1.06) !important;
+  }
+}
