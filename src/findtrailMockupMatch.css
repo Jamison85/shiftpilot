@@ -1,0 +1,226 @@
+.option3-home {
+  position: relative !important;
+  min-height: 100svh !important;
+  overflow: hidden !important;
+  padding-top: calc(54px + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+  text-align: center !important;
+}
+
+.option3-home > * {
+  position: relative;
+  z-index: 2;
+}
+
+.option3-home .brand-mark {
+  width: 76px !important;
+  height: 76px !important;
+  margin-bottom: 8px !important;
+}
+
+.option3-home .eyebrow {
+  margin-bottom: 26px !important;
+}
+
+.option3-home .hero-title {
+  max-width: 10.4ch !important;
+  font-size: clamp(2.55rem, 10.8vw, 4.15rem) !important;
+  line-height: 0.98 !important;
+  margin-top: 0 !important;
+}
+
+.option3-home .lead {
+  max-width: 22.5rem !important;
+  margin-top: 10px !important;
+  font-size: 1rem !important;
+  line-height: 1.45 !important;
+}
+
+.option3-home .slogan-pill {
+  display: none !important;
+}
+
+.option3-home .hero-illustration {
+  position: absolute !important;
+  left: -16% !important;
+  right: -16% !important;
+  bottom: 105px !important;
+  width: 132% !important;
+  height: 235px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  opacity: 0.55 !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  background:
+    radial-gradient(circle at 68% 30%, rgba(232,216,225,0.78), transparent 8%),
+    linear-gradient(180deg, rgba(255,253,249,0) 0%, rgba(236,241,235,0.38) 28%, rgba(190,211,199,0.68) 100%) !important;
+}
+
+.option3-home .hero-illustration .landscape-layer {
+  bottom: -25% !important;
+  height: 76% !important;
+}
+
+.option3-home .hero-illustration .layer-one {
+  background: #d3ded6 !important;
+  opacity: 0.86 !important;
+}
+
+.option3-home .hero-illustration .layer-two {
+  background: #aebfb4 !important;
+  opacity: 0.82 !important;
+}
+
+.option3-home .hero-illustration .landscape-path {
+  left: 42% !important;
+  bottom: -16% !important;
+  height: 74% !important;
+  width: 11% !important;
+  transform: rotate(20deg) !important;
+}
+
+.option3-home .action-stack {
+  margin-top: auto !important;
+  padding-top: 108px !important;
+  max-width: 342px !important;
+}
+
+.option3-home .primary-btn,
+.option3-home .secondary-btn {
+  min-height: 58px !important;
+  border-radius: 999px !important;
+}
+
+.option3-home .bottom-nav {
+  max-width: 342px !important;
+  margin-top: 14px !important;
+  background: rgba(255,253,249,0.68) !important;
+  border-color: rgba(255,255,255,0.72) !important;
+  backdrop-filter: blur(10px) saturate(1.02) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(1.02) !important;
+}
+
+.option3-home .history-card {
+  margin-top: 12px !important;
+  max-width: 342px !important;
+}
+
+.top-bar-illustrated {
+  margin-bottom: 12px !important;
+}
+
+.top-bar-illustrated h1 {
+  font-size: clamp(2.35rem, 9.8vw, 3.7rem) !important;
+}
+
+.option3-question .option3-option-card {
+  background: rgba(255,253,249,0.82) !important;
+  padding: 10px !important;
+}
+
+.option3-question .choice-btn {
+  border-radius: 0 !important;
+  min-height: 58px !important;
+  box-shadow: none !important;
+  border-width: 0 0 1px 0 !important;
+  background: transparent !important;
+}
+
+.option3-question .choice-btn:last-child {
+  border-bottom: 0 !important;
+}
+
+.option3-question .choice-btn.selected {
+  background: rgba(232,216,225,0.42) !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(141,110,131,0.18) !important;
+}
+
+.option3-journey .top-bar {
+  margin-bottom: 8px !important;
+}
+
+.option3-journey .step-card {
+  padding: 24px 18px 18px !important;
+}
+
+.option3-journey .editorial-step-head {
+  grid-template-columns: 1fr 86px !important;
+  align-items: start !important;
+}
+
+.option3-journey .step-card h1 {
+  font-size: clamp(2.2rem, 9.6vw, 3.3rem) !important;
+  max-width: 8.5ch !important;
+}
+
+.option3-journey .step-illustration {
+  width: 86px !important;
+  height: 86px !important;
+  margin-top: 2px !important;
+}
+
+.step-helper-card {
+  background: rgba(255,253,249,0.9) !important;
+  box-shadow: var(--o3-soft-shadow) !important;
+}
+
+.option3-journey .checklist {
+  overflow: hidden !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(36,52,46,0.08) !important;
+  background: rgba(255,253,249,0.9) !important;
+  box-shadow: var(--o3-soft-shadow) !important;
+  gap: 0 !important;
+}
+
+.option3-journey .check-row {
+  border: 0 !important;
+  border-bottom: 1px solid rgba(36,52,46,0.08) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.option3-journey .check-row:last-child {
+  border-bottom: 0 !important;
+}
+
+.option3-journey .check-row.checked {
+  background: rgba(233,243,236,0.65) !important;
+}
+
+.option3-journey .bottom-actions {
+  grid-template-columns: 0.95fr 1.05fr !important;
+  gap: 10px !important;
+}
+
+.option3-journey .bottom-actions .found-btn {
+  grid-column: 1 / -1 !important;
+}
+
+.option3-journey .bottom-actions .calm-btn {
+  color: var(--o3-plum) !important;
+}
+
+@media (max-width: 380px) {
+  .option3-home {
+    padding-top: calc(36px + env(safe-area-inset-top, 0px)) !important;
+  }
+
+  .option3-home .hero-title {
+    font-size: clamp(2.3rem, 10.4vw, 3.45rem) !important;
+  }
+
+  .option3-home .hero-illustration {
+    bottom: 94px !important;
+    height: 205px !important;
+  }
+
+  .option3-home .action-stack {
+    padding-top: 82px !important;
+  }
+}
