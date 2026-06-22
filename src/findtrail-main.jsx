@@ -9,6 +9,7 @@ import './findtrailVideoVisibility.css'
 import './findtrailProfessional.css'
 import './findtrailOption3.css'
 import './findtrailMockupMatch.css'
+import './findtrailSound.css'
 
 ReactDOM.createRoot(document.getElementById('findtrail-root')).render(
   <React.StrictMode>
