@@ -23,13 +23,13 @@ export function createCalmSound() {
 
   function shapeBreath(state) {
     if (!context || !breathGain || !filter || stopped) return
-    const gainTargets = { inhale: 0.82, hold: 0.58, exhale: 0.24 }
-    const filterTargets = { inhale: 1150, hold: 720, exhale: 360 }
-    const detuneTargets = { inhale: 8, hold: 0, exhale: -9 }
+    const gainTargets = { inhale: 0.9, hold: 0.64, exhale: 0.3 }
+    const filterTargets = { inhale: 1250, hold: 760, exhale: 390 }
+    const detuneTargets = { inhale: 9, hold: 0, exhale: -10 }
     const panTargets = { inhale: -0.08, hold: 0, exhale: 0.08 }
 
-    smoothParam(breathGain.gain, gainTargets[state] || 0.35, 0.95)
-    smoothParam(filter.frequency, filterTargets[state] || 520, 1.05)
+    smoothParam(breathGain.gain, gainTargets[state] || 0.42, 0.95)
+    smoothParam(filter.frequency, filterTargets[state] || 560, 1.05)
     smoothParam(toneA.detune, detuneTargets[state] || 0, 1.1)
     smoothParam(toneB.detune, (detuneTargets[state] || 0) * -0.65, 1.1)
     smoothParam(toneC.detune, (detuneTargets[state] || 0) * 0.35, 1.1)
@@ -98,9 +98,9 @@ export function createCalmSound() {
     padGain.gain.setValueAtTime(0.0001, now)
     breathGain.gain.setValueAtTime(0.0001, now)
     master.gain.setValueAtTime(0.0001, now)
-    padGain.gain.linearRampToValueAtTime(0.28, now + 1.4)
-    breathGain.gain.linearRampToValueAtTime(0.24, now + 1.4)
-    master.gain.linearRampToValueAtTime(0.018, now + 2.2)
+    padGain.gain.linearRampToValueAtTime(0.36, now + 1.4)
+    breathGain.gain.linearRampToValueAtTime(0.34, now + 1.4)
+    master.gain.linearRampToValueAtTime(0.034, now + 2.2)
   }
 
   function stop() {
