@@ -10,6 +10,8 @@ import './findtrailProfessional.css'
 import './findtrailOption3.css'
 import './findtrailMockupMatch.css'
 import './findtrailSound.css'
+import './findtrailHomeNavPatch.css'
+import './findtrailHomeNavPatch.js'
 
 ReactDOM.createRoot(document.getElementById('findtrail-root')).render(
   <React.StrictMode>
