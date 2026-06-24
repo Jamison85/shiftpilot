@@ -1,0 +1,595 @@
+/*
+  ShiftPilot Retail Final UI Layer
+  Loaded last so the actual mounted app receives the premium retail cockpit treatment.
+  Goals: calmer color, clearer hierarchy, less visual noise, better mobile ergonomics.
+*/
+
+:root {
+  color-scheme: light;
+  --sp-bg-warm: #f4efe6;
+  --sp-bg-warm-2: #e9e0d4;
+  --sp-paper: rgba(255, 255, 255, 0.9);
+  --sp-paper-solid: #fffdf8;
+  --sp-ink: #11283a;
+  --sp-ink-soft: #22394a;
+  --sp-muted: #687780;
+  --sp-muted-2: #849097;
+  --sp-line: rgba(17, 40, 58, 0.12);
+  --sp-accent: #5f7568;
+  --sp-accent-2: #839a88;
+  --sp-accent-soft: #edf3ec;
+  --sp-warn: #c99a36;
+  --sp-warn-soft: #fff3d5;
+  --sp-danger: #b9545d;
+  --sp-danger-soft: #fff0f2;
+  --sp-radius-xl: 32px;
+  --sp-radius-lg: 24px;
+  --sp-radius-md: 17px;
+  --sp-shadow-soft: 0 16px 42px rgba(17, 40, 58, 0.1);
+  --sp-shadow-deep: 0 30px 76px rgba(17, 40, 58, 0.18);
+  --sp-inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 12% -10%, rgba(131, 154, 136, 0.26), transparent 32%),
+    radial-gradient(circle at 92% 4%, rgba(17, 40, 58, 0.12), transparent 30%),
+    linear-gradient(180deg, #fffaf2 0%, var(--sp-bg-warm) 46%, var(--sp-bg-warm-2) 100%) !important;
+  color: var(--sp-ink) !important;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[role='button']:focus-visible {
+  outline: 3px solid rgba(95, 117, 104, 0.34) !important;
+  outline-offset: 3px !important;
+}
+
+.sp-app {
+  min-height: 100vh !important;
+  padding-bottom: 194px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 242, 0.68), rgba(244, 239, 230, 0.92)),
+    radial-gradient(circle at 92% 0%, rgba(131, 154, 136, 0.3), transparent 34%),
+    radial-gradient(circle at -12% 18%, rgba(17, 40, 58, 0.1), transparent 32%) !important;
+}
+
+.sp-app::before {
+  width: 380px !important;
+  height: 380px !important;
+  right: -205px !important;
+  top: -195px !important;
+  background: radial-gradient(circle, rgba(131, 154, 136, 0.22), transparent 70%) !important;
+}
+
+.sp-app::after {
+  width: 330px !important;
+  height: 330px !important;
+  left: -220px !important;
+  bottom: 120px !important;
+  background: radial-gradient(circle, rgba(17, 40, 58, 0.1), transparent 72%) !important;
+}
+
+.sp-main {
+  padding-bottom: 184px !important;
+}
+
+.sp-page {
+  width: min(100%, 780px) !important;
+  padding: 16px 15px 204px !important;
+}
+
+.sp-topbar {
+  gap: 12px !important;
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px !important;
+  background: linear-gradient(180deg, rgba(255, 250, 242, 0.96), rgba(255, 250, 242, 0.78)) !important;
+  border-bottom: 1px solid rgba(17, 40, 58, 0.08) !important;
+  box-shadow: 0 14px 30px rgba(17, 40, 58, 0.07) !important;
+  backdrop-filter: blur(22px) saturate(1.18) !important;
+}
+
+.sp-logo {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 17px !important;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.28), transparent 30%),
+    linear-gradient(145deg, #11283a 0%, #22394a 58%, #5f7568 100%) !important;
+  box-shadow: 0 16px 34px rgba(17, 40, 58, 0.24), var(--sp-inner-glow) !important;
+  letter-spacing: 0.08em !important;
+}
+
+.sp-brand strong {
+  color: var(--sp-ink) !important;
+  font-size: 18px !important;
+  letter-spacing: -0.035em !important;
+}
+
+.sp-brand span {
+  color: var(--sp-muted) !important;
+  font-size: 12px !important;
+}
+
+.sp-icon-btn {
+  width: 43px !important;
+  height: 43px !important;
+  border: 1px solid rgba(17, 40, 58, 0.08) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: var(--sp-ink-soft) !important;
+  box-shadow: 0 10px 22px rgba(17, 40, 58, 0.08), var(--sp-inner-glow) !important;
+}
+
+.sp-hero {
+  padding: 23px 22px 21px !important;
+  border-radius: var(--sp-radius-xl) !important;
+  border: 1px solid rgba(255, 255, 255, 0.42) !important;
+  background:
+    radial-gradient(circle at 86% 8%, rgba(173, 191, 166, 0.28), transparent 29%),
+    linear-gradient(145deg, #102538 0%, #1e3a4d 54%, #516858 100%) !important;
+  color: #fff !important;
+  box-shadow: var(--sp-shadow-deep) !important;
+}
+
+.sp-hero::after {
+  width: 205px !important;
+  height: 205px !important;
+  right: -84px !important;
+  top: -92px !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.sp-hero.shift-ended {
+  background:
+    radial-gradient(circle at 88% 9%, rgba(185, 84, 93, 0.2), transparent 30%),
+    linear-gradient(145deg, #102538 0%, #243544 57%, #516858 100%) !important;
+}
+
+.sp-hero.shift-wrap {
+  background:
+    radial-gradient(circle at 88% 9%, rgba(201, 154, 54, 0.22), transparent 30%),
+    linear-gradient(145deg, #102538 0%, #263e50 57%, #516858 100%) !important;
+}
+
+.sp-hero.shift-before {
+  background:
+    radial-gradient(circle at 88% 9%, rgba(173, 191, 166, 0.28), transparent 30%),
+    linear-gradient(145deg, #102538 0%, #2a4355 57%, #5f7568 100%) !important;
+}
+
+.sp-kicker,
+.sp-section-title span,
+.sp-page-head span,
+.sp-now-head span,
+.sp-hours-card span,
+.mg-card-head span,
+.sp-report-label {
+  color: var(--sp-accent) !important;
+}
+
+.sp-hero .sp-kicker,
+.sp-hero-status span {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.sp-hero h1,
+.sp-page-head h1,
+.sp-section-title h2,
+.sp-now-card h2 {
+  letter-spacing: -0.07em !important;
+}
+
+.sp-hero h1 {
+  color: #fff !important;
+  max-width: 11ch !important;
+}
+
+.sp-hero-copy {
+  max-width: 28rem !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-size: 12px !important;
+  line-height: 1.42 !important;
+}
+
+.sp-truck {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: var(--sp-inner-glow) !important;
+}
+
+.sp-truck input:checked + span {
+  background: #b9c9ae !important;
+}
+
+.sp-shift-tabs {
+  background: rgba(255, 255, 255, 0.11) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 18px !important;
+}
+
+.sp-shift-tabs button {
+  min-height: 41px !important;
+  color: rgba(255, 255, 255, 0.74) !important;
+  border-radius: 13px !important;
+}
+
+.sp-shift-tabs button.active {
+  background: #fffdf8 !important;
+  color: var(--sp-ink) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15) !important;
+}
+
+.sp-shift-tabs.light {
+  background: rgba(255, 255, 255, 0.74) !important;
+  border: 1px solid var(--sp-line) !important;
+  box-shadow: 0 12px 24px rgba(17, 40, 58, 0.06) !important;
+}
+
+.sp-shift-tabs.light button {
+  color: var(--sp-muted) !important;
+}
+
+.sp-shift-tabs.light button.active {
+  background: var(--sp-ink) !important;
+  color: #fff !important;
+}
+
+.sp-hero-status {
+  gap: 9px !important;
+}
+
+.sp-hero-status > div {
+  min-height: 68px !important;
+  padding: 11px 10px !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.105) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.sp-hero-status strong {
+  margin-top: 4px !important;
+  font-size: 15px !important;
+  line-height: 1.05 !important;
+}
+
+.sp-hero-status .ahead {
+  background: rgba(95, 117, 104, 0.24) !important;
+  border-color: rgba(185, 201, 174, 0.32) !important;
+}
+
+.sp-hero-status .behind {
+  background: rgba(185, 84, 93, 0.18) !important;
+  border-color: rgba(185, 84, 93, 0.32) !important;
+}
+
+.sp-voice {
+  margin-top: 15px !important;
+  border: 1px solid rgba(255, 255, 255, 0.58) !important;
+  border-radius: var(--sp-radius-lg) !important;
+  background:
+    linear-gradient(145deg, #516858, #829785) !important;
+  color: #fff !important;
+  box-shadow: 0 22px 46px rgba(81, 104, 88, 0.24), var(--sp-inner-glow) !important;
+}
+
+.sp-voice > span {
+  color: #516858 !important;
+  background: #fffdf8 !important;
+  box-shadow: 0 10px 22px rgba(17, 40, 58, 0.1) !important;
+}
+
+.sp-now-card {
+  position: relative !important;
+  overflow: hidden !important;
+  margin-top: 16px !important;
+  padding: 21px !important;
+  border: 1px solid rgba(17, 40, 58, 0.1) !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(201, 154, 54, 0.12), transparent 30%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(255, 250, 242, 0.9)) !important;
+  box-shadow: var(--sp-shadow-soft) !important;
+}
+
+.sp-now-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: var(--sp-inner-glow);
+}
+
+.sp-now-card h2 {
+  color: var(--sp-ink) !important;
+  font-size: clamp(31px, 8.5vw, 43px) !important;
+  line-height: 0.98 !important;
+}
+
+.sp-now-head b,
+.sp-status-grid small,
+.sp-compact-task small,
+.sp-task-row small,
+.sp-brand span {
+  color: var(--sp-muted) !important;
+}
+
+.sp-now-details {
+  gap: 7px !important;
+}
+
+.sp-now-details > span,
+.sp-now-details .sp-priority {
+  min-height: 31px !important;
+  padding: 7px 10px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(17, 40, 58, 0.09) !important;
+  background: rgba(255, 255, 255, 0.84) !important;
+  color: #596872 !important;
+  box-shadow: 0 6px 14px rgba(17, 40, 58, 0.055), var(--sp-inner-glow) !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+}
+
+.sp-priority.required {
+  color: #516858 !important;
+  background: var(--sp-accent-soft) !important;
+}
+
+.sp-priority.urgent {
+  color: var(--sp-danger) !important;
+  background: var(--sp-danger-soft) !important;
+}
+
+.sp-priority.high {
+  color: #806015 !important;
+  background: var(--sp-warn-soft) !important;
+}
+
+.sp-learned {
+  color: #516858 !important;
+  font-size: 11px !important;
+}
+
+.sp-focus-start,
+.sp-small-primary {
+  border: 0 !important;
+  background: linear-gradient(145deg, #11283a, #253d50) !important;
+  color: #fff !important;
+  box-shadow: 0 16px 34px rgba(17, 40, 58, 0.18), var(--sp-inner-glow) !important;
+}
+
+.sp-secondary-action,
+.sp-subtle-reset {
+  border: 1px solid rgba(17, 40, 58, 0.1) !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  color: #516858 !important;
+  box-shadow: 0 12px 24px rgba(17, 40, 58, 0.075), var(--sp-inner-glow) !important;
+}
+
+.sp-subtle-reset {
+  color: #9b424d !important;
+  background: rgba(255, 240, 242, 0.78) !important;
+}
+
+.sp-status-grid {
+  gap: 9px !important;
+}
+
+.sp-status-grid article,
+.sp-plan-button,
+.sp-compact-task,
+.sp-task-row,
+.sp-hours-card,
+.sp-report,
+.mg-card,
+.mg-template-card,
+.mg-problem-card,
+.sp-learning-card {
+  border: 1px solid rgba(17, 40, 58, 0.1) !important;
+  background: rgba(255, 255, 255, 0.89) !important;
+  box-shadow: 0 12px 30px rgba(17, 40, 58, 0.075), var(--sp-inner-glow) !important;
+}
+
+.sp-status-grid article {
+  min-height: 96px !important;
+  border-radius: 20px !important;
+}
+
+.sp-status-grid span {
+  color: var(--sp-muted) !important;
+}
+
+.sp-status-grid strong {
+  color: var(--sp-ink) !important;
+}
+
+.sp-progress {
+  background: rgba(17, 40, 58, 0.09) !important;
+}
+
+.sp-progress i {
+  background: linear-gradient(90deg, #516858, #839a88) !important;
+}
+
+.sp-plan-button {
+  border-radius: 24px !important;
+  grid-template-columns: 45px 1fr auto !important;
+}
+
+.sp-plan-button > svg:first-child {
+  background: linear-gradient(145deg, #11283a, #516858) !important;
+  color: #fff !important;
+}
+
+.sp-section-title button,
+.sp-row-action,
+.sp-compact-task button {
+  color: #516858 !important;
+  background: var(--sp-accent-soft) !important;
+}
+
+.sp-compact-task,
+.sp-task-row {
+  border-radius: 19px !important;
+}
+
+.sp-seq,
+.sp-check {
+  background: #f1f4ef !important;
+  border-color: rgba(95, 117, 104, 0.22) !important;
+  color: #516858 !important;
+}
+
+.sp-dot.required,
+.sp-dot.normal,
+.sp-dot.low {
+  background: #839a88 !important;
+}
+
+.sp-dot.high {
+  background: var(--sp-warn) !important;
+}
+
+.sp-dot.urgent {
+  background: var(--sp-danger) !important;
+}
+
+.sp-task-row.done {
+  background: rgba(237, 243, 236, 0.88) !important;
+  border-color: rgba(95, 117, 104, 0.22) !important;
+}
+
+.sp-task-row.done .sp-check {
+  background: #516858 !important;
+  color: #fff !important;
+}
+
+.sp-nav {
+  left: 12px !important;
+  right: 12px !important;
+  bottom: max(12px, env(safe-area-inset-bottom)) !important;
+  max-width: 640px !important;
+  margin: auto !important;
+  padding: 9px 10px !important;
+  border: 1px solid rgba(17, 40, 58, 0.1) !important;
+  border-radius: 28px !important;
+  background: rgba(255, 253, 248, 0.92) !important;
+  box-shadow: 0 18px 50px rgba(17, 40, 58, 0.18), var(--sp-inner-glow) !important;
+  backdrop-filter: blur(22px) saturate(1.16) !important;
+}
+
+.sp-nav button {
+  border-radius: 18px !important;
+  color: var(--sp-muted) !important;
+}
+
+.sp-nav button.active {
+  background: #eef3ec !important;
+  color: #516858 !important;
+}
+
+.sp-nav-mic span {
+  width: 57px !important;
+  height: 57px !important;
+  background: linear-gradient(145deg, #11283a, #516858) !important;
+  box-shadow: 0 16px 30px rgba(17, 40, 58, 0.24), var(--sp-inner-glow) !important;
+}
+
+/* Visual label correction: this is a report/snapshot tool for your shift, not a whole-day guilt portal. */
+.sp-nav button:nth-child(4) span {
+  font-size: 0 !important;
+}
+
+.sp-nav button:nth-child(4) span::after {
+  content: 'Report';
+  font-size: 10px !important;
+}
+
+.sp-sheet,
+.sp-modal,
+.sp-listening,
+.sp-toast {
+  border: 1px solid rgba(17, 40, 58, 0.1) !important;
+  background: rgba(255, 253, 248, 0.95) !important;
+  color: var(--sp-ink) !important;
+  box-shadow: var(--sp-shadow-deep), var(--sp-inner-glow) !important;
+}
+
+.sp-toast {
+  border-radius: 18px !important;
+  background: #11283a !important;
+  color: #fff !important;
+}
+
+.sp-log-interrupt {
+  background: linear-gradient(145deg, #c99a36, #e4c375) !important;
+  color: #11283a !important;
+}
+
+.sp-interruption-types button.active {
+  background: var(--sp-warn-soft) !important;
+  border-color: rgba(128, 96, 21, 0.42) !important;
+  color: #806015 !important;
+}
+
+.sp-empty-list {
+  border-color: rgba(17, 40, 58, 0.12) !important;
+  background: rgba(255, 255, 255, 0.58) !important;
+}
+
+@media (min-width: 760px) {
+  .sp-page {
+    padding-inline: 20px !important;
+  }
+
+  .sp-hero {
+    padding: 28px !important;
+  }
+
+  .sp-status-grid,
+  .sp-upcoming,
+  .sp-task-stack {
+    gap: 11px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .sp-hero {
+    padding: 21px 19px !important;
+  }
+
+  .sp-hero h1 {
+    font-size: clamp(32px, 10vw, 42px) !important;
+  }
+
+  .sp-now-card h2 {
+    font-size: clamp(30px, 9.5vw, 39px) !important;
+  }
+
+  .sp-nav {
+    left: 9px !important;
+    right: 9px !important;
+  }
+
+  .sp-nav button span,
+  .sp-nav button:nth-child(4) span::after {
+    font-size: 9px !important;
+  }
+}
