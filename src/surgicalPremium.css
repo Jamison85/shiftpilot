@@ -1,0 +1,589 @@
+/*
+  ShiftPilot Surgical Premium Layer
+  Keeps the original useful AppV2 + IncidentReporter logic intact.
+  Only corrects hierarchy, spacing, nav behavior, and the floating action traffic jam.
+*/
+
+:root {
+  --surg-canvas: #f4f1ec;
+  --surg-card: #ffffff;
+  --surg-ink: #172330;
+  --surg-muted: #74808a;
+  --surg-accent: #2f5246;
+  --surg-accent-soft: #edf4f0;
+  --surg-accent-softer: #f7faf8;
+  --surg-amber: #9f6b2c;
+  --surg-amber-soft: #fff2df;
+  --surg-coral: #9d5660;
+  --surg-coral-soft: #fff1f3;
+  --surg-shadow-card: 0 18px 48px rgba(23, 35, 48, 0.055);
+  --surg-shadow-focus: 0 28px 78px rgba(23, 35, 48, 0.085);
+  --surg-radius: 16px;
+  --surg-radius-lg: 20px;
+}
+
+html,
+body,
+#root,
+.sp-app {
+  background: var(--surg-canvas) !important;
+}
+
+body {
+  color: var(--surg-ink) !important;
+  line-height: 1.65 !important;
+}
+
+.sp-app {
+  padding-bottom: 190px !important;
+}
+
+.sp-main {
+  padding-bottom: 190px !important;
+}
+
+.sp-page {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  max-width: 820px !important;
+  margin: 0 auto !important;
+  padding-bottom: 210px !important;
+}
+
+/* Top app chrome */
+.sp-topbar {
+  border: 0 !important;
+  background: rgba(244, 241, 236, 0.9) !important;
+  backdrop-filter: blur(18px) saturate(1.08) !important;
+  box-shadow: none !important;
+}
+
+.sp-logo {
+  border-radius: 14px !important;
+  background: var(--surg-ink) !important;
+  box-shadow: 0 16px 34px rgba(23, 35, 48, 0.14) !important;
+}
+
+.sp-icon-btn {
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--surg-card) !important;
+  color: var(--surg-ink) !important;
+  box-shadow: var(--surg-shadow-card) !important;
+}
+
+/* Rebuild hierarchy without touching React state. */
+.sp-hero {
+  order: 1 !important;
+  margin-bottom: 14px !important;
+  border: 0 !important;
+  border-radius: var(--surg-radius-lg) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--surg-ink) !important;
+  padding: 6px 4px 8px !important;
+}
+
+.sp-hero::after,
+.sp-hero::before {
+  display: none !important;
+}
+
+.sp-hero-row {
+  align-items: flex-start !important;
+  gap: 16px !important;
+}
+
+.sp-kicker,
+.sp-hero .sp-kicker,
+.sp-section-title span,
+.sp-now-head span,
+.sp-status-grid span,
+.sp-report-label {
+  color: var(--surg-muted) !important;
+  font-size: 10px !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.17em !important;
+  text-transform: uppercase !important;
+}
+
+.sp-hero h1 {
+  margin: 8px 0 8px !important;
+  color: var(--surg-ink) !important;
+  font-size: clamp(34px, 9vw, 48px) !important;
+  line-height: 1.03 !important;
+  letter-spacing: 0.005em !important;
+}
+
+.sp-hero-copy {
+  max-width: 33rem !important;
+  color: var(--surg-muted) !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+
+.sp-truck,
+.sp-shift-tabs,
+.sp-shift-tabs.light {
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.54) !important;
+  box-shadow: none !important;
+}
+
+.sp-shift-tabs {
+  margin-top: 18px !important;
+  padding: 7px !important;
+  gap: 8px !important;
+}
+
+.sp-shift-tabs button {
+  min-height: 44px !important;
+  border-radius: 999px !important;
+  color: var(--surg-muted) !important;
+  background: transparent !important;
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.06em !important;
+}
+
+.sp-shift-tabs button.active,
+.sp-shift-tabs.light button.active {
+  background: #fff !important;
+  color: var(--surg-accent) !important;
+  box-shadow: 0 12px 28px rgba(47, 82, 70, 0.08) !important;
+}
+
+/* Metrics move above the focus card. */
+.sp-status-grid {
+  order: 2 !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin: 12px 0 14px !important;
+}
+
+.sp-status-grid article,
+.sp-hero-status > div {
+  min-height: 86px !important;
+  border: 0 !important;
+  border-radius: var(--surg-radius) !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  box-shadow: none !important;
+  padding: 17px !important;
+}
+
+.sp-status-grid strong,
+.sp-hero-status strong {
+  margin-top: 8px !important;
+  color: var(--surg-ink) !important;
+  font-size: 20px !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.sp-hero-status .behind strong,
+.sp-status-grid article:nth-child(2) strong {
+  color: var(--surg-amber) !important;
+}
+
+.sp-hero-status .behind,
+.sp-hero-status .ended {
+  background: var(--surg-amber-soft) !important;
+}
+
+.sp-hero-status .behind span,
+.sp-hero-status .ended span {
+  color: var(--surg-amber) !important;
+}
+
+/* Remove oversized voice card. Voice remains in the bottom nav mic slot. */
+.sp-voice {
+  display: none !important;
+}
+
+/* Absolute focus card sits directly below metrics. */
+.sp-now-card {
+  order: 3 !important;
+  margin: 0 0 18px !important;
+  padding: 28px !important;
+  border: 0 !important;
+  border-radius: var(--surg-radius-lg) !important;
+  background: var(--surg-card) !important;
+  color: var(--surg-ink) !important;
+  box-shadow: var(--surg-shadow-focus) !important;
+}
+
+.sp-now-card::before,
+.sp-now-card::after {
+  display: none !important;
+}
+
+.sp-now-head {
+  gap: 12px !important;
+}
+
+.sp-now-head b {
+  display: inline-flex !important;
+  min-height: 34px !important;
+  align-items: center !important;
+  padding: 8px 13px !important;
+  border-radius: 999px !important;
+  background: var(--surg-accent-soft) !important;
+  color: var(--surg-accent) !important;
+  font-size: 11px !important;
+  font-weight: 850 !important;
+}
+
+.sp-now-card h2 {
+  margin: 16px 0 12px !important;
+  color: var(--surg-ink) !important;
+  font-size: clamp(32px, 8.5vw, 46px) !important;
+  line-height: 1.04 !important;
+  letter-spacing: 0.005em !important;
+}
+
+.sp-now-details {
+  gap: 10px !important;
+}
+
+.sp-now-details > span,
+.sp-priority {
+  min-height: 34px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--surg-accent-softer) !important;
+  color: var(--surg-ink) !important;
+  padding: 8px 13px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+.sp-priority.urgent,
+.sp-dot.urgent {
+  color: var(--surg-coral) !important;
+  background: var(--surg-coral-soft) !important;
+}
+
+.sp-priority.high,
+.sp-dot.high {
+  color: var(--surg-amber) !important;
+  background: var(--surg-amber-soft) !important;
+}
+
+.sp-focus-start,
+.sp-small-primary,
+.sp-log-interrupt,
+.gold-btn {
+  min-height: 54px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--surg-accent) !important;
+  color: #fff !important;
+  box-shadow: 0 18px 42px rgba(47, 82, 70, 0.2) !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+}
+
+.sp-secondary-action,
+.sp-subtle-reset,
+.sp-row-action,
+.sp-section-title button,
+.sp-compact-task button,
+.sp-report button:not(.gold-btn),
+.ir-actions button:not(.primary),
+.ir-preview button,
+.ir-quick-row button {
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--surg-accent-soft) !important;
+  color: var(--surg-accent) !important;
+  box-shadow: none !important;
+  font-weight: 800 !important;
+}
+
+.sp-subtle-reset {
+  background: var(--surg-coral-soft) !important;
+  color: var(--surg-coral) !important;
+}
+
+/* Secondary actions stay useful but stop fighting the focus card. */
+.sp-plan-button {
+  order: 4 !important;
+  margin: 0 0 22px !important;
+  border: 0 !important;
+  border-radius: var(--surg-radius) !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  box-shadow: none !important;
+  padding: 18px !important;
+}
+
+.sp-section-title {
+  order: 5 !important;
+  margin: 0 4px 14px !important;
+}
+
+.sp-section-title h2 {
+  margin-top: 6px !important;
+  color: var(--surg-ink) !important;
+  font-size: 24px !important;
+  line-height: 1.12 !important;
+}
+
+.sp-upcoming {
+  order: 6 !important;
+  display: grid !important;
+  gap: 14px !important;
+}
+
+.sp-compact-task,
+.sp-task-row,
+.sp-history-list > article,
+.sp-learning-card,
+.sp-hours-card,
+.sp-report,
+.mg-card,
+.mg-template-card,
+.mg-problem-card,
+.ir-cardlet,
+.ir-saved article {
+  border: 0 !important;
+  border-radius: var(--surg-radius) !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  box-shadow: none !important;
+}
+
+.sp-compact-task {
+  min-height: 82px !important;
+  padding: 18px !important;
+  align-items: center !important;
+}
+
+.sp-task-row {
+  min-height: 84px !important;
+  padding: 18px !important;
+}
+
+.sp-compact-task strong,
+.sp-task-row strong {
+  color: var(--surg-ink) !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
+
+.sp-compact-task small,
+.sp-task-row small,
+.sp-learned,
+.sp-report p,
+.mg-card p,
+.ir-header p {
+  color: var(--surg-muted) !important;
+  line-height: 1.65 !important;
+}
+
+.sp-compact-task button,
+.sp-check {
+  min-width: 42px !important;
+  height: 42px !important;
+  border-radius: 999px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+}
+
+.sp-seq,
+.sp-check {
+  border: 0 !important;
+  background: var(--surg-accent-soft) !important;
+  color: var(--surg-accent) !important;
+}
+
+.sp-dot {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 999px !important;
+  background: var(--surg-accent) !important;
+}
+
+/* Bottom nav: predictable slots, no left-floating mic. */
+.sp-nav {
+  left: 10px !important;
+  right: 86px !important;
+  bottom: max(12px, env(safe-area-inset-bottom)) !important;
+  max-width: 650px !important;
+  margin: auto !important;
+  padding: 9px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 24px 70px rgba(23, 35, 48, 0.14) !important;
+  backdrop-filter: blur(22px) saturate(1.12) !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+}
+
+.sp-nav button {
+  min-height: 58px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--surg-muted) !important;
+  font-size: 10px !important;
+  font-weight: 850 !important;
+}
+
+.sp-nav button.active {
+  background: var(--surg-accent-soft) !important;
+  color: var(--surg-accent) !important;
+  box-shadow: none !important;
+}
+
+.sp-nav-mic span {
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 999px !important;
+  background: var(--surg-accent) !important;
+  color: white !important;
+  box-shadow: 0 14px 34px rgba(47, 82, 70, 0.22) !important;
+}
+
+.sp-nav button:nth-child(4) span {
+  font-size: 0 !important;
+}
+
+.sp-nav button:nth-child(4) span::after {
+  content: 'Report';
+  font-size: 10px !important;
+}
+
+/* Incident Reporter: keep the special logic, make launch predictable. */
+.ir-fab {
+  position: fixed !important;
+  z-index: 46 !important;
+  left: auto !important;
+  right: 10px !important;
+  bottom: max(12px, env(safe-area-inset-bottom)) !important;
+  width: 70px !important;
+  height: 76px !important;
+  min-height: 0 !important;
+  padding: 8px 6px !important;
+  border: 0 !important;
+  border-radius: 26px !important;
+  background: var(--surg-amber-soft) !important;
+  color: var(--surg-amber) !important;
+  box-shadow: 0 24px 70px rgba(23, 35, 48, 0.12) !important;
+  display: grid !important;
+  place-items: center !important;
+  gap: 2px !important;
+}
+
+.ir-fab span {
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 999px !important;
+  display: grid !important;
+  place-items: center !important;
+  background: rgba(159, 107, 44, 0.13) !important;
+  color: var(--surg-amber) !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+}
+
+.ir-fab b {
+  font-size: 9px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.03em !important;
+}
+
+.ir-fab i {
+  top: 4px !important;
+  right: 4px !important;
+  background: var(--surg-coral) !important;
+}
+
+.ir-panel {
+  border: 0 !important;
+  border-radius: 28px 28px 0 0 !important;
+  background: var(--surg-card) !important;
+  box-shadow: 0 -24px 70px rgba(23, 35, 48, 0.16) !important;
+}
+
+.ir-header,
+.ir-preview,
+.ir-form input,
+.ir-form textarea,
+.ir-form select,
+.sp-report textarea,
+.sp-report pre,
+.sp-extra input {
+  border: 0 !important;
+  border-radius: var(--surg-radius) !important;
+}
+
+.ir-form input,
+.ir-form textarea,
+.ir-form select,
+.sp-report textarea,
+.sp-extra input {
+  background: var(--surg-accent-softer) !important;
+  color: var(--surg-ink) !important;
+  padding: 14px 16px !important;
+  line-height: 1.65 !important;
+}
+
+.ir-actions .primary,
+.ir-chip-grid button.active,
+.ir-task-picks button.active {
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--surg-accent) !important;
+  color: white !important;
+  box-shadow: 0 18px 42px rgba(47, 82, 70, 0.18) !important;
+}
+
+/* Prep/kitchen exploratory sections should feel secondary, not like the fire. */
+.prep-shift-panel,
+.prep-shift-card,
+[class*='prep'] .sp-plan-button,
+[class*='prep'] .mg-card {
+  order: 7 !important;
+  opacity: 0.94 !important;
+}
+
+@media (max-width: 520px) {
+  .sp-page {
+    padding-inline: 16px !important;
+  }
+
+  .sp-status-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .sp-now-card {
+    padding: 24px !important;
+  }
+
+  .sp-nav {
+    right: 82px !important;
+    padding: 8px !important;
+  }
+
+  .sp-nav button {
+    min-height: 56px !important;
+    font-size: 9px !important;
+  }
+
+  .sp-nav button:nth-child(4) span::after {
+    font-size: 9px !important;
+  }
+
+  .sp-nav-mic span {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .ir-fab {
+    width: 66px !important;
+    height: 74px !important;
+    border-radius: 24px !important;
+  }
+}
