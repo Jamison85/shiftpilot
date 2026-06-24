@@ -10,6 +10,7 @@ import './premium-theme.css';
 import './finishPolish.css';
 import './incidentReporter.css';
 import './retailFinal.css';
+import './surgicalPremium.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
