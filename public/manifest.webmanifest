@@ -1,14 +1,14 @@
 {
   "name": "ShiftPilot",
   "short_name": "ShiftPilot",
-  "description": "Voice-first shift planning, daily walks, handoffs, and completion reports.",
+  "description": "Voice-first shift planning, daily walks, reports, and completion records for retail managers.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
-  "background_color": "#f6f1e8",
-  "theme_color": "#102538",
+  "background_color": "#f4efe6",
+  "theme_color": "#11283a",
   "orientation": "portrait",
   "categories": ["productivity", "business"],
   "icons": [
