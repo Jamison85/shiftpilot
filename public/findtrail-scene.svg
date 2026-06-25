@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-label="Calm misty valley with a winding trail">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFF9F0"/>
+      <stop offset="0.52" stop-color="#F5EFE7"/>
+      <stop offset="1" stop-color="#E3ECE5"/>
+    </linearGradient>
+    <linearGradient id="hillA" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C8D4C8"/>
+      <stop offset="1" stop-color="#94AA9E"/>
+    </linearGradient>
+    <linearGradient id="hillB" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#AABCB1"/>
+      <stop offset="1" stop-color="#5C7A6D"/>
+    </linearGradient>
+    <linearGradient id="trail" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFDF7"/>
+      <stop offset="1" stop-color="#F4EBE0"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="520" fill="url(#sky)"/>
+  <circle cx="785" cy="170" r="92" fill="#FFF6E7" opacity=".74" filter="url(#soft)"/>
+  <circle cx="375" cy="140" r="72" fill="#E6C9D7" opacity=".62"/>
+  <circle cx="915" cy="354" r="54" fill="#E8D8E1" opacity=".44"/>
+  <path d="M0 205c86-56 153-65 235-12 77 50 133 41 209 5 96-46 161-28 235 25 75 53 149 55 236 10 93-48 194-65 285-20v307H0z" fill="#D8E2DA" opacity=".82"/>
+  <path d="M0 280c120-64 230-52 337 14 82 50 152 44 253-4 112-53 216-46 306 8 89 53 190 48 304-6v228H0z" fill="url(#hillA)" opacity=".88"/>
+  <path d="M0 360c116-72 218-62 330 8 96 61 174 50 282-2 105-50 207-35 293 27 89 64 181 60 295-2v129H0z" fill="url(#hillB)" opacity=".9"/>
+  <path d="M520 520c52-92 151-130 154-184 2-39-52-56-36-92 16-38 99-50 159-82 37-20 61-42 72-66-1 44-21 77-62 106-55 39-133 49-142 87-8 35 65 51 67 96 3 54-91 86-138 135z" fill="url(#trail)" opacity=".96"/>
+  <path d="M544 520c43-78 138-112 141-160 1-30-43-46-33-78" fill="none" stroke="#D8CABC" stroke-width="4" opacity=".42" stroke-linecap="round"/>
+  <g opacity=".82" fill="#2E4A41">
+    <path d="M1000 330l33-82 33 82h-23l29 62h-78l29-62z"/>
+    <path d="M1073 360l22-58 23 58h-16l21 45h-56l21-45z" opacity=".78"/>
+    <path d="M129 372l18-46 18 46h-13l17 36h-44l17-36z" opacity=".56"/>
+    <path d="M208 342l22-62 23 62h-17l23 51h-59l23-51z" opacity=".62"/>
+  </g>
+  <path d="M0 448c145-72 270-52 392 5 92 43 186 39 303-6 149-57 304-60 505 0v73H0z" fill="#20342E" opacity=".12"/>
+  <rect width="1200" height="520" fill="#FFFDF8" opacity=".08"/>
+</svg>
