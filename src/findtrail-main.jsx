@@ -13,6 +13,7 @@ import './findtrailSound.css'
 import './findtrailPro.css'
 import './findtrailHomeLuxury.css'
 import './findtrailHomeStabilize.css'
+import './findtrailHomeRemoveClutter.css'
 
 ReactDOM.createRoot(document.getElementById('findtrail-root')).render(
   <React.StrictMode>
