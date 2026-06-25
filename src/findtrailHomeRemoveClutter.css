@@ -1,0 +1,30 @@
+.pro-home .care-rails,
+.pro-home .compact-history {
+  display: none !important;
+}
+
+.pro-home {
+  justify-content: center !important;
+  gap: 14px !important;
+  padding-top: calc(28px + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+.pro-home .hero-illustration {
+  margin: 8px 0 2px !important;
+}
+
+.pro-home .pro-home-actions {
+  margin-top: 8px !important;
+}
+
+.pro-home .bottom-nav {
+  margin-top: 2px !important;
+}
+
+@media (max-width: 380px) {
+  .pro-home {
+    gap: 12px !important;
+    justify-content: flex-start !important;
+  }
+}
