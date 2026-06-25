@@ -11,6 +11,7 @@ import './findtrailOption3.css'
 import './findtrailMockupMatch.css'
 import './findtrailSound.css'
 import './findtrailPro.css'
+import './findtrailHomeLuxury.css'
 
 ReactDOM.createRoot(document.getElementById('findtrail-root')).render(
   <React.StrictMode>
