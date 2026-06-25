@@ -15,6 +15,25 @@
   border: 1px solid rgba(255,255,255,0.88) !important;
   outline: 1px solid rgba(32,52,46,0.04) !important;
   box-shadow: 0 20px 46px rgba(32,52,46,0.09), 0 6px 14px rgba(32,52,46,0.045), inset 0 1px 0 rgba(255,255,255,0.78) !important;
+  background-image: linear-gradient(180deg, rgba(255,253,248,0.04), rgba(255,253,248,0.12)), url('/findtrail-scene.svg') !important;
+  background-size: cover !important;
+  background-position: center center !important;
+}
+
+.pro-home .hero-illustration > span {
+  display: none !important;
+}
+
+.top-bar-illustrated .step-illustration,
+.option3-journey .step-illustration {
+  background-image: linear-gradient(180deg, rgba(255,253,248,0.04), rgba(255,253,248,0.12)), url('/findtrail-scene.svg') !important;
+  background-size: cover !important;
+  background-position: center center !important;
+}
+
+.top-bar-illustrated .step-illustration > span,
+.option3-journey .step-illustration > span {
+  display: none !important;
 }
 
 .pro-home .pro-home-actions {
