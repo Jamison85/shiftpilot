@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import FindTrailApp from './FindTrailApp.jsx'
+import FindTrailAppPro from './FindTrailAppPro.jsx'
 import './findtrail.css'
 import './findtrailPolish.css'
 import './findtrailDepth.css'
@@ -10,11 +10,10 @@ import './findtrailProfessional.css'
 import './findtrailOption3.css'
 import './findtrailMockupMatch.css'
 import './findtrailSound.css'
-import './findtrailHomeNavPatch.css'
-import './findtrailHomeNavPatch.js'
+import './findtrailPro.css'
 
 ReactDOM.createRoot(document.getElementById('findtrail-root')).render(
   <React.StrictMode>
-    <FindTrailApp />
+    <FindTrailAppPro />
   </React.StrictMode>,
 )
