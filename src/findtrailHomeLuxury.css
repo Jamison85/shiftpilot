@@ -1,0 +1,233 @@
+.pro-home {
+  --home-card-top: calc(18px + env(safe-area-inset-top, 0px));
+  position: relative !important;
+  min-height: 100svh !important;
+  padding: calc(28px + env(safe-area-inset-top, 0px)) 20px calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  text-align: left !important;
+}
+
+.pro-home::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute;
+  z-index: 0;
+  inset: var(--home-card-top) 14px auto;
+  height: 424px;
+  border-radius: 40px;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.94), rgba(255, 253, 248, 0.70)),
+    radial-gradient(circle at 18% 12%, rgba(255,255,255,0.9), transparent 13rem),
+    radial-gradient(circle at 86% 20%, rgba(234, 217, 226, 0.46), transparent 11rem),
+    linear-gradient(180deg, rgba(145,173,157,0.08), rgba(145,173,157,0.02));
+  border: 1px solid rgba(255,255,255,0.86);
+  box-shadow: 0 28px 90px rgba(32,52,46,0.13), 0 8px 24px rgba(32,52,46,0.06);
+  backdrop-filter: blur(18px) saturate(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(1.05);
+}
+
+.pro-home::after {
+  content: '' !important;
+  display: block !important;
+  position: absolute;
+  z-index: 0;
+  left: 4%;
+  right: 4%;
+  top: 318px;
+  height: 230px;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at 48% 55%, rgba(145,173,157,0.24), transparent 50%),
+    radial-gradient(ellipse at 72% 50%, rgba(234,217,226,0.26), transparent 42%);
+  filter: blur(28px);
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.pro-home > * {
+  position: relative;
+  z-index: 2;
+}
+
+.pro-home .brand-mark {
+  width: 68px !important;
+  height: 68px !important;
+  margin: 4px 0 14px !important;
+  align-self: flex-start !important;
+  box-shadow: 0 16px 38px rgba(32,52,46,0.10), inset 0 1px 0 rgba(255,255,255,0.75) !important;
+}
+
+.pro-home .eyebrow {
+  margin: 0 0 14px !important;
+  color: rgba(32,52,46,0.70) !important;
+  font-size: 0.76rem !important;
+  letter-spacing: 0.22em !important;
+  text-align: left !important;
+}
+
+.pro-home .hero-title {
+  max-width: 8.8ch !important;
+  margin: 0 !important;
+  text-align: left !important;
+  font-size: clamp(2.8rem, 11vw, 4.25rem) !important;
+  line-height: 0.9 !important;
+  letter-spacing: -0.065em !important;
+}
+
+.pro-home .lead {
+  max-width: 21.5rem !important;
+  margin: 18px 0 0 !important;
+  text-align: left !important;
+  color: rgba(32,52,46,0.68) !important;
+  font-size: 1.02rem !important;
+  line-height: 1.46 !important;
+}
+
+.pro-home .hero-illustration {
+  position: absolute !important;
+  z-index: 1 !important;
+  inset: auto -22% 282px -18% !important;
+  width: auto !important;
+  height: 230px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  opacity: 0.46 !important;
+  background:
+    radial-gradient(circle at 70% 36%, rgba(234,217,226,0.76), transparent 8%),
+    linear-gradient(180deg, rgba(255,253,248,0) 0%, rgba(225,233,226,0.46) 34%, rgba(174,191,180,0.72) 100%) !important;
+  pointer-events: none !important;
+}
+
+.pro-home .hero-illustration .landscape-path {
+  left: 45% !important;
+  width: 10% !important;
+  opacity: 0.82 !important;
+}
+
+.pro-home .care-rails {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+  margin: 158px 0 0 !important;
+  padding-top: 0 !important;
+}
+
+.pro-home .feature-rail {
+  min-height: 62px;
+  padding: 12px 14px !important;
+  border-radius: 24px !important;
+  background: rgba(255, 253, 248, 0.76) !important;
+  border: 1px solid rgba(255,255,255,0.82) !important;
+  box-shadow: 0 14px 38px rgba(32,52,46,0.075), inset 0 1px 0 rgba(255,255,255,0.68) !important;
+}
+
+.pro-home .feature-rail > span {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(180deg, rgba(234,217,226,0.66), rgba(234,217,226,0.38)) !important;
+  color: var(--pro-plum) !important;
+}
+
+.pro-home .feature-rail strong {
+  font-size: 0.98rem !important;
+}
+
+.pro-home .feature-rail small {
+  display: block !important;
+  font-size: 0.82rem !important;
+  color: rgba(32,52,46,0.58) !important;
+}
+
+.pro-home .pro-home-actions {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 16px 0 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+}
+
+.pro-home .primary-btn,
+.pro-home .secondary-btn {
+  min-height: 60px !important;
+  font-size: 1rem !important;
+}
+
+.pro-home .primary-btn {
+  background: linear-gradient(180deg, #9db7a8 0%, #769985 100%) !important;
+  box-shadow: 0 18px 40px rgba(118,153,133,0.30), inset 0 1px 0 rgba(255,255,255,0.34) !important;
+}
+
+.pro-home .calm-btn {
+  background: rgba(255,253,248,0.88) !important;
+  color: var(--pro-plum) !important;
+  border-color: rgba(141,110,131,0.16) !important;
+}
+
+.pro-home .bottom-nav {
+  width: 100% !important;
+  max-width: none !important;
+  margin-top: 14px !important;
+  padding: 10px !important;
+  border-radius: 28px !important;
+  background: rgba(255,253,248,0.82) !important;
+  border: 1px solid rgba(255,255,255,0.86) !important;
+  box-shadow: 0 18px 48px rgba(32,52,46,0.10), inset 0 1px 0 rgba(255,255,255,0.72) !important;
+}
+
+.pro-home .bottom-nav-item {
+  min-height: 58px;
+  padding: 8px 4px !important;
+  border-radius: 20px !important;
+}
+
+.pro-home .bottom-nav-item.active {
+  background: rgba(145,173,157,0.16) !important;
+}
+
+.pro-home .compact-history {
+  width: 100% !important;
+  max-width: none !important;
+  margin-top: 14px !important;
+}
+
+@media (min-width: 430px) {
+  .pro-home {
+    max-width: 480px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .pro-home {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .pro-home::before {
+    inset-left: 10px;
+    inset-right: 10px;
+    height: 392px;
+    border-radius: 34px;
+  }
+
+  .pro-home .hero-title {
+    font-size: clamp(2.42rem, 10.5vw, 3.45rem) !important;
+  }
+
+  .pro-home .lead {
+    font-size: 0.96rem !important;
+  }
+
+  .pro-home .care-rails {
+    margin-top: 132px !important;
+  }
+
+  .pro-home .feature-rail {
+    min-height: 56px;
+  }
+}
